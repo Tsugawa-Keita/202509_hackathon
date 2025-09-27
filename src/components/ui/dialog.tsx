@@ -16,9 +16,7 @@ import { XIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-function Dialog({
-  ...props
-}: ComponentProps<typeof DialogPrimitiveRoot>) {
+function Dialog({ ...props }: ComponentProps<typeof DialogPrimitiveRoot>) {
   return <DialogPrimitiveRoot data-slot="dialog" {...props} />;
 }
 

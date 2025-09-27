@@ -1,13 +1,12 @@
 "use client";
 
-import type { ComponentProps } from "react";
-import { useEffect, useRef } from "react";
-
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
+import type { ComponentProps } from "react";
+import { useEffect, useRef } from "react";
 import {
   type ClassNames,
   type DayButtonProps,
@@ -72,9 +71,7 @@ function CalendarChevron({
   }
 
   if (orientation === "right") {
-    return (
-      <ChevronRightIcon className={cn("size-4", className)} {...props} />
-    );
+    return <ChevronRightIcon className={cn("size-4", className)} {...props} />;
   }
 
   return <ChevronDownIcon className={cn("size-4", className)} {...props} />;

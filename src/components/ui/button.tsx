@@ -52,9 +52,7 @@ function Button({
   const mergedClassName = cn(buttonVariants({ variant, size }), className);
 
   if (asChild) {
-    return (
-      <Comp data-slot="button" className={mergedClassName} {...rest} />
-    );
+    return <Comp data-slot="button" className={mergedClassName} {...rest} />;
   }
 
   return (
