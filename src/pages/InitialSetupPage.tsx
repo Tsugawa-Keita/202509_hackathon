@@ -1,21 +1,73 @@
-import { type ChangeEvent, type FormEvent, useState } from "react";
+import { type ChangeEvent, type FormEvent, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { format, isValid, parseISO } from "date-fns";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  DATE_LIMITS,
+  descriptionParagraphs,
+  ERROR_MESSAGES,
+} from "../constants/initialSetup";
 import type { AppState } from "../lib/appState";
 import { createInitialState, saveAppState } from "../lib/appState";
 
-const descriptionParagraphs = [
-  "出産予定日を登録すると、出産前後の1ヶ月間に必要なTODOや情報を受け取れます。",
-  "登録した情報はお使いの端末にのみ保存されるので、安心してご利用ください。",
+const HIGHLIGHTS = [
+  {
+    heading: "出産前後のTODOを自動整理",
+    body: "出産予定日の前後1ヶ月で必要になる手続きや買い物リストを時系列で把握できます。",
+  },
+  {
+    heading: "パートナーや家族との共有準備に",
+    body: "すぐに確認できる静的なリファレンスとして、準備状況の可視化に役立ちます。",
+  },
+] as const;
+
+const REMINDERS = [
+  "入力した予定日はブラウザにのみ保存され、外部には送信されません。",
+  "登録後もトップページの設定メニューからいつでも更新できます。",
 ] as const;
 
 type InitialSetupPageProps = {
   onConfigured?: (nextState: AppState) => void;
 };
 
+const MIN_DATE_VALUE = parseISO(DATE_LIMITS.MIN_DATE);
+const MAX_DATE_VALUE = parseISO(DATE_LIMITS.MAX_DATE);
+
+const formatIsoDate = (date: Date) => format(date, "yyyy-MM-dd");
+
+const parseDueDate = (value: string) => {
+  if (!value) {
+    return undefined;
+  }
+
+  const parsed = parseISO(value);
+  if (!isValid(parsed)) {
+    return undefined;
+  }
+
+  return parsed;
+};
+
 const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   const navigate = useNavigate();
   const [dueDate, setDueDate] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  const selectedDate = useMemo(() => parseDueDate(dueDate), [dueDate]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setDueDate(event.target.value);
@@ -27,7 +79,13 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!dueDate) {
-      setErrorMessage("出産予定日を入力してください。");
+      setErrorMessage(ERROR_MESSAGES.REQUIRED_DUE_DATE);
+      return;
+    }
+
+    const validatedDate = parseDueDate(dueDate);
+    if (!validatedDate) {
+      setErrorMessage(ERROR_MESSAGES.REQUIRED_DUE_DATE);
       return;
     }
 
@@ -40,45 +98,94 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-slate-50 px-6 py-10 text-slate-800">
-      <section className="w-full max-w-xl rounded-lg bg-white p-8 shadow-md">
-        <h1 className="font-bold text-2xl">まずは出産予定日を登録しましょう</h1>
-        <div className="mt-4 space-y-3">
-          {descriptionParagraphs.map((paragraph) => (
-            <p className="leading-relaxed" key={paragraph}>
-              {paragraph}
+    <main className="min-h-screen bg-slate-50 py-16 text-slate-900">
+      <div className="mx-auto w-full max-w-5xl px-4">
+        <Card className="border-none shadow-lg">
+          <CardHeader className="gap-4 pb-0">
+            <Badge className="w-fit" variant="secondary">
+              STEP 1
+            </Badge>
+            <CardTitle className="font-bold text-3xl md:text-4xl">
+              出産予定日を登録しましょう
+            </CardTitle>
+            <CardDescription className="text-base text-slate-600">
+              {descriptionParagraphs[0]}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-12 pt-10 pb-12 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+            <section className="space-y-8">
+              <div className="space-y-6">
+                {HIGHLIGHTS.map(({ heading, body }) => (
+                  <div
+                    className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+                    key={heading}
+                  >
+                    <h2 className="font-semibold text-slate-900 text-xl">
+                      {heading}
+                    </h2>
+                    <p className="mt-2 text-base text-slate-600 leading-relaxed">
+                      {body}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-xl border border-slate-300 border-dashed bg-slate-100/70 p-6 text-slate-600 text-sm leading-relaxed">
+                {descriptionParagraphs[1]}
+              </div>
+              <ul className="space-y-3 text-slate-600 text-sm">
+                {REMINDERS.map((reminder) => (
+                  <li className="flex items-start gap-2" key={reminder}>
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-slate-400" />
+                    <span>{reminder}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+            <form
+              className="flex h-fit flex-col gap-6 rounded-xl border border-slate-200 bg-white p-8 shadow-sm"
+              onSubmit={handleSubmit}
+            >
+              <div className="space-y-2">
+                <Label
+                  className="font-semibold text-slate-700 text-sm"
+                  htmlFor="due-date"
+                >
+                  出産予定日
+                </Label>
+                <Input
+                  id="due-date"
+                  max={DATE_LIMITS.MAX_DATE}
+                  min={DATE_LIMITS.MIN_DATE}
+                  name="due-date"
+                  onChange={handleChange}
+                  type="date"
+                  value={dueDate}
+                />
+              </div>
+              <p className="text-slate-500 text-xs">
+                {DATE_LIMITS.MIN_DATE} から {DATE_LIMITS.MAX_DATE}{" "}
+                の間で入力してください。
+              </p>
+              {errorMessage ? (
+                <p className="font-semibold text-rose-600 text-sm" role="alert">
+                  {errorMessage}
+                </p>
+              ) : null}
+              <Button className="h-11 text-base" type="submit">
+                保存して始める
+              </Button>
+            </form>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-2 border-slate-100 border-t bg-slate-50 px-8 py-6 text-slate-600 text-sm">
+            <p>
+              登録が完了すると、ダッシュボードで必要な準備タスクが解放されます。
             </p>
-          ))}
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-2">
-            <label className="font-semibold text-sm" htmlFor="due-date">
-              出産予定日
-            </label>
-            <input
-              className="rounded-md border border-slate-300 px-3 py-2 text-base shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-              id="due-date"
-              max="2100-12-31"
-              min="2000-01-01"
-              name="due-date"
-              onChange={handleChange}
-              type="date"
-              value={dueDate}
-            />
-          </div>
-          {errorMessage ? (
-            <p className="font-semibold text-rose-600 text-sm" role="alert">
-              {errorMessage}
+            <p>
+              情報はすべて端末内に保存され、ハッカソン期間中いつでもリセット可能です。
             </p>
-          ) : null}
-          <button
-            className="w-full rounded-md bg-indigo-600 px-4 py-3 font-semibold text-base text-white transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
-            type="submit"
-          >
-            保存して始める
-          </button>
-        </form>
-      </section>
+          </CardFooter>
+        </Card>
+      </div>
     </main>
   );
 };
