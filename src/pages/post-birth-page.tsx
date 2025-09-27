@@ -16,10 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import {
-  createDisplayDate,
-  MILLISECONDS_PER_DAY,
-} from "../constants/common";
+import { createDisplayDate, MILLISECONDS_PER_DAY } from "../constants/common";
 import {
   ANCHOR_IDS,
   PAGE_CONTENT,
@@ -53,29 +50,33 @@ const getImportantTask = (
     return null;
   }
 
-  const pending = tasks.filter(
-    (task) => !completedIdSet.has(String(task.id))
-  );
+  const pending = tasks.filter((task) => !completedIdSet.has(String(task.id)));
 
   if (pending.length === 0) {
     return null;
   }
 
-  return pending.reduce((current, candidate) => {
-    if (!current) {
-      return candidate;
-    }
+  return pending.reduce(
+    (current, candidate) => {
+      if (!current) {
+        return candidate;
+      }
 
-    if (candidate.priority > current.priority) {
-      return candidate;
-    }
+      if (candidate.priority > current.priority) {
+        return candidate;
+      }
 
-    if (candidate.priority === current.priority && candidate.id < current.id) {
-      return candidate;
-    }
+      if (
+        candidate.priority === current.priority &&
+        candidate.id < current.id
+      ) {
+        return candidate;
+      }
 
-    return current;
-  }, null as (typeof pending)[number] | null);
+      return current;
+    },
+    null as (typeof pending)[number] | null
+  );
 };
 
 const formatProgressLabel = (completed: number, total: number) =>
@@ -104,9 +105,7 @@ const buildImportantTaskContent = ({
 
   if (!importantTask) {
     return (
-      <p className="text-slate-600 text-sm">
-        {IMPORTANT_TASK_EMPTY_MESSAGE}
-      </p>
+      <p className="text-slate-600 text-sm">{IMPORTANT_TASK_EMPTY_MESSAGE}</p>
     );
   }
 
@@ -122,7 +121,9 @@ const buildImportantTaskContent = ({
       <span className="font-semibold text-sm">{IMPORTANT_TASK_HEADING}</span>
       <span className="font-bold text-lg">{importantTask.text}</span>
       <Badge className={priorityBadge.accent}>{priorityBadge.label}</Badge>
-      <span className="text-rose-700/90 text-xs">{IMPORTANT_TASK_LINK_HINT}</span>
+      <span className="text-rose-700/90 text-xs">
+        {IMPORTANT_TASK_LINK_HINT}
+      </span>
     </a>
   );
 };
@@ -155,7 +156,9 @@ const buildScheduleContent = ({
             </span>
             <span className="text-base text-slate-800">{item.text}</span>
           </div>
-          {index === 0 ? <span className="sr-only">スケジュール開始</span> : null}
+          {index === 0 ? (
+            <span className="sr-only">スケジュール開始</span>
+          ) : null}
         </li>
       ))}
     </ol>
