@@ -63,20 +63,23 @@ const getImportantTask = (
     return null;
   }
 
+  const compareTodoPriority = (left: TodoItem, right: TodoItem) => {
+    if (left.priorityType !== right.priorityType) {
+      return left.priorityType - right.priorityType;
+    }
+    if (left.priority !== right.priority) {
+      return left.priority - right.priority;
+    }
+    return left.id - right.id;
+  };
+
   return pending.reduce(
     (current, candidate) => {
       if (!current) {
         return candidate;
       }
 
-      if (candidate.priority > current.priority) {
-        return candidate;
-      }
-
-      if (
-        candidate.priority === current.priority &&
-        candidate.id < current.id
-      ) {
+      if (compareTodoPriority(candidate, current) < 0) {
         return candidate;
       }
 
