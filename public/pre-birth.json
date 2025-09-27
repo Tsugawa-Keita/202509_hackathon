@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "text": "産院への交通手段と所要時間を確認する",
+    "priorityType": 1,
+    "priority": 10
+  },
+  {
+    "id": 2,
+    "text": "陣痛タクシーに登録する",
+    "priorityType": 1,
+    "priority": 9
+  },
+  {
+    "id": 3,
+    "text": "入院準備用のバッグを用意する",
+    "priorityType": 1,
+    "priority": 8
+  },
+  {
+    "id": 4,
+    "text": "ママの好きな食べ物をリストアップする",
+    "priorityType": 2,
+    "priority": 7
+  },
+  {
+    "id": 5,
+    "text": "出産立会いの希望を産院に確認する",
+    "priorityType": 1,
+    "priority": 9
+  },
+  {
+    "id": 6,
+    "text": "新生児用品の買い物リストを作成する",
+    "priorityType": 2,
+    "priority": 6
+  },
+  {
+    "id": 7,
+    "text": "ベビーベッドの組み立てと設置",
+    "priorityType": 2,
+    "priority": 8
+  },
+  {
+    "id": 8,
+    "text": "産休・育休の手続きを確認する",
+    "priorityType": 1,
+    "priority": 7
+  },
+  {
+    "id": 9,
+    "text": "ママの精神的サポートについて学ぶ",
+    "priorityType": 3,
+    "priority": 8
+  },
+  {
+    "id": 10,
+    "text": "出産後の家事分担について話し合う",
+    "priorityType": 3,
+    "priority": 6
+  },
+  {
+    "id": 11,
+    "text": "緊急連絡先リストを作成する",
+    "priorityType": 1,
+    "priority": 9
+  },
+  {
+    "id": 12,
+    "text": "新生児の沐浴方法を学ぶ",
+    "priorityType": 2,
+    "priority": 5
+  },
+  {
+    "id": 13,
+    "text": "ママの体調変化に注意を払う",
+    "priorityType": 3,
+    "priority": 10
+  },
+  {
+    "id": 14,
+    "text": "チャイルドシートの選択と取り付け",
+    "priorityType": 2,
+    "priority": 7
+  },
+  {
+    "id": 15,
+    "text": "出生届等の手続きについて調べる",
+    "priorityType": 1,
+    "priority": 6
+  }
+]

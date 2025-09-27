@@ -65,8 +65,35 @@
    - 各項目にチェックボックス
    - "さらに表示"ボタンで追加項目を読み込み
    - 完了したTODOの進捗管理
+   - パパのTODO用のjsonを使用
 
-### 3. 出産後UI（未実装）
+#### データ定義
+
+- pre-birth.json
+
+```json
+{
+  "id": "number",
+  "text": "string",
+  "priorityType": "number",
+  "priority": "number"
+}
+```
+
+### 3. 出産後UI
+
+#### データ定義
+
+- post-birth.json
+
+```json
+{
+  "id": "number",
+  "text": "string",
+  "priorityType": "number",
+  "priority": "number"
+}
+```
 
 **将来の機能**: 赤ちゃんが生まれた後のパパ向けガイド
 

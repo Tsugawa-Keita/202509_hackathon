@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "text": "出生届を役所に提出する",
+    "priorityType": 1,
+    "priority": 10
+  },
+  {
+    "id": 2,
+    "text": "健康保険の加入手続きをする",
+    "priorityType": 1,
+    "priority": 9
+  },
+  {
+    "id": 3,
+    "text": "児童手当の申請をする",
+    "priorityType": 1,
+    "priority": 8
+  },
+  {
+    "id": 4,
+    "text": "ママの産後うつに注意を払う",
+    "priorityType": 3,
+    "priority": 10
+  },
+  {
+    "id": 5,
+    "text": "授乳のサポートをする",
+    "priorityType": 2,
+    "priority": 9
+  },
+  {
+    "id": 6,
+    "text": "おむつ替えを積極的に行う",
+    "priorityType": 2,
+    "priority": 8
+  },
+  {
+    "id": 7,
+    "text": "夜間の授乳・おむつ替えを分担する",
+    "priorityType": 2,
+    "priority": 9
+  },
+  {
+    "id": 8,
+    "text": "赤ちゃんの沐浴を担当する",
+    "priorityType": 2,
+    "priority": 7
+  },
+  {
+    "id": 9,
+    "text": "家事を率先して行う",
+    "priorityType": 2,
+    "priority": 8
+  },
+  {
+    "id": 10,
+    "text": "ママの話を聞き精神的サポートをする",
+    "priorityType": 3,
+    "priority": 10
+  },
+  {
+    "id": 11,
+    "text": "1ヶ月健診の付き添いをする",
+    "priorityType": 1,
+    "priority": 8
+  },
+  {
+    "id": 12,
+    "text": "予防接種のスケジュールを確認する",
+    "priorityType": 1,
+    "priority": 7
+  },
+  {
+    "id": 13,
+    "text": "ママの外出時間を作ってあげる",
+    "priorityType": 3,
+    "priority": 6
+  },
+  {
+    "id": 14,
+    "text": "赤ちゃんとの時間を大切にする",
+    "priorityType": 3,
+    "priority": 8
+  },
+  {
+    "id": 15,
+    "text": "写真・動画で成長記録を残す",
+    "priorityType": 3,
+    "priority": 5
+  }
+]
