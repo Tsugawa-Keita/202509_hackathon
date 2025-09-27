@@ -1,6 +1,10 @@
-import type { KeyboardEvent } from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Badge } from "@/components/ui/badge";
+import type { KeyboardEvent, MouseEvent, PointerEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSyncTasks } from "@/api/tasks";
+import TodoChecklistSection, {
+  useTodoChecklist,
+} from "@/components/tasks/TodoChecklistSection";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,17 +13,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { clampDays, createDisplayDate } from "../constants/common";
 import {
-  DATA_URL,
   DAY_MS,
   getMotherSummaryByWeeks,
   PREGNANCY_LIMITS,
-  priorityTypeBadges,
-  TODO_DISPLAY_STEP,
 } from "../constants/preBirth";
 import type { AppState } from "../lib/appState";
 import { saveAppState } from "../lib/appState";
@@ -29,100 +36,113 @@ type PreBirthPageProps = {
   state: AppState;
 };
 
-type TodoItem = {
-  id: number;
-  priority: number;
-  priorityType: number;
-  text: string;
-};
-
 const DAYS_PER_WEEK = 7;
-const PERCENT_SCALE = 100;
+const LONG_PRESS_DURATION_MS = 800;
 
 const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
-  const [todos, setTodos] = useState<TodoItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState("");
-  const [visibleCount, setVisibleCount] = useState(TODO_DISPLAY_STEP);
-  const [completedIds, setCompletedIds] = useState<string[]>(
-    state.completedTodos
-  );
+  // debug用絶対消さないこと
+  const {
+    data: tasks,
+    error: tasksError,
+    isLoading: isTasksLoading,
+  } = useSyncTasks();
 
-  useEffect(() => {
-    let isActive = true;
+  const todoChecklist = useTodoChecklist({
+    isLoading: Boolean(isTasksLoading),
+    loadError: tasksError
+      ? "TODOリストの読み込みに失敗しました。時間をおいて再度お試しください。"
+      : "",
+    onStateChange,
+    state,
+    todos: tasks ?? [],
+  });
+  const [isConfirmOpen, setConfirmOpen] = useState(false);
+  const holdTimerRef = useRef<number | null>(null);
+  const navigate = useNavigate();
 
-    const applySuccess = (data: TodoItem[]) => {
-      if (!isActive) {
-        return;
-      }
-      setTodos(data);
-      setLoadError("");
-    };
-
-    const applyFailure = () => {
-      if (!isActive) {
-        return;
-      }
-      setLoadError(
-        "TODOリストの読み込みに失敗しました。時間をおいて再度お試しください。"
-      );
-    };
-
-    const finishLoading = () => {
-      if (isActive) {
-        setIsLoading(false);
-      }
-    };
-
-    const loadTodos = async () => {
-      try {
-        const response = await fetch(DATA_URL, { cache: "force-cache" });
-        if (!response.ok) {
-          throw new Error("failed to load");
-        }
-
-        const data = (await response.json()) as TodoItem[];
-        applySuccess(data);
-      } catch {
-        applyFailure();
-      } finally {
-        finishLoading();
-      }
-    };
-
-    loadTodos();
-
-    return () => {
-      isActive = false;
-    };
+  const openConfirmation = useCallback(() => {
+    setConfirmOpen(true);
   }, []);
 
-  useEffect(() => {
-    setCompletedIds(state.completedTodos);
-  }, [state.completedTodos]);
-
-  const sortedTodos = useMemo(() => {
-    if (todos.length === 0) {
-      return [] as TodoItem[];
+  const clearHoldTimer = useCallback(() => {
+    if (holdTimerRef.current !== null && typeof window !== "undefined") {
+      window.clearTimeout(holdTimerRef.current);
+      holdTimerRef.current = null;
     }
+  }, []);
 
-    const copy = [...todos];
-    copy.sort((left, right) => {
-      if (right.priority === left.priority) {
-        return left.id - right.id;
+  const startHoldTimer = useCallback(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    clearHoldTimer();
+    holdTimerRef.current = window.setTimeout(() => {
+      holdTimerRef.current = null;
+      openConfirmation();
+    }, LONG_PRESS_DURATION_MS);
+  }, [clearHoldTimer, openConfirmation]);
+
+  const handlePointerDown = useCallback(
+    (event: PointerEvent<HTMLButtonElement>) => {
+      if (event.button !== 0) {
+        return;
       }
+      startHoldTimer();
+    },
+    [startHoldTimer]
+  );
 
-      return right.priority - left.priority;
-    });
+  const handlePointerEnd = useCallback(() => {
+    clearHoldTimer();
+  }, [clearHoldTimer]);
 
-    return copy;
-  }, [todos]);
+  const handleDoubleClick = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      clearHoldTimer();
+      openConfirmation();
+    },
+    [clearHoldTimer, openConfirmation]
+  );
 
-  useEffect(() => {
-    if (visibleCount > sortedTodos.length) {
-      setVisibleCount(sortedTodos.length);
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLButtonElement>) => {
+      if (event.repeat) {
+        return;
+      }
+      if (event.key === " " || event.key === "Enter") {
+        event.preventDefault();
+        startHoldTimer();
+      }
+    },
+    [startHoldTimer]
+  );
+
+  const handleKeyUp = useCallback(
+    (event: KeyboardEvent<HTMLButtonElement>) => {
+      if (event.key === " " || event.key === "Enter") {
+        event.preventDefault();
+        clearHoldTimer();
+      }
+    },
+    [clearHoldTimer]
+  );
+
+  useEffect(() => () => clearHoldTimer(), [clearHoldTimer]);
+
+  const handleConfirmTransition = useCallback(() => {
+    const nextState: AppState = {
+      ...state,
+      appState: "post-birth",
+    };
+
+    saveAppState(nextState);
+    if (onStateChange) {
+      onStateChange(nextState);
     }
-  }, [sortedTodos, visibleCount]);
+    setConfirmOpen(false);
+    navigate("/post-birth");
+  }, [navigate, onStateChange, state]);
 
   const daysUntilDue = useMemo(() => {
     const dueDate = new Date(state.dueDate);
@@ -153,76 +173,14 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
     () => getMotherSummaryByWeeks(weeksPregnant),
     [weeksPregnant]
   );
-
-  const completedCount = useMemo(() => {
-    if (sortedTodos.length === 0) {
-      return 0;
-    }
-
-    return sortedTodos.reduce(
-      (total, todo) =>
-        completedIds.includes(String(todo.id)) ? total + 1 : total,
-      0
-    );
-  }, [completedIds, sortedTodos]);
-
-  const progressPercentage = useMemo(() => {
-    if (sortedTodos.length === 0) {
-      return 0;
-    }
-
-    return Math.round((completedCount / sortedTodos.length) * PERCENT_SCALE);
-  }, [completedCount, sortedTodos]);
-
-  const displayTodos = useMemo(() => {
-    if (sortedTodos.length === 0) {
-      return [] as TodoItem[];
-    }
-
-    return sortedTodos.slice(0, visibleCount);
-  }, [sortedTodos, visibleCount]);
-
-  const handleToggleTodo = useCallback(
-    (todoId: number) => {
-      const sourceId = String(todoId);
-      setCompletedIds((prev) => {
-        const hasId = prev.includes(sourceId);
-        const nextCompleted = hasId
-          ? prev.filter((value) => value !== sourceId)
-          : prev.concat(sourceId);
-
-        const nextState: AppState = {
-          ...state,
-          completedTodos: nextCompleted,
-        };
-
-        saveAppState(nextState);
-        if (onStateChange) {
-          onStateChange(nextState);
-        }
-
-        return nextCompleted;
-      });
-    },
-    [onStateChange, state]
-  );
-
-  const handleShowMore = useCallback(() => {
-    setVisibleCount((prev) => {
-      const nextCount = prev + TODO_DISPLAY_STEP;
-      if (nextCount >= sortedTodos.length) {
-        return sortedTodos.length;
-      }
-
-      return nextCount;
-    });
-  }, [sortedTodos.length]);
-
   const dueDateDisplay = useMemo(
     () => createDisplayDate(state.dueDate),
     [state.dueDate]
   );
-  const isShowMoreDisabled = displayTodos.length >= sortedTodos.length;
+
+  // useEffect(() => {
+  //   console.log(tasks);
+  // }, [tasks]);
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-slate-100 px-6 py-12 text-slate-900">
@@ -245,15 +203,18 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
                 現在の進捗
               </CardDescription>
               <CardTitle className="font-bold text-2xl text-indigo-900">
-                {completedCount} / {sortedTodos.length} 件
+                {todoChecklist.completedCount} / {todoChecklist.totalCount} 件
               </CardTitle>
             </CardHeader>
             <CardContent className="px-0">
               <div className="flex items-center justify-between text-sm">
                 <span>達成率</span>
-                <span>{progressPercentage}%</span>
+                <span>{todoChecklist.progressPercentage}%</span>
               </div>
-              <Progress className="mt-2 h-3" value={progressPercentage} />
+              <Progress
+                className="mt-2 h-3"
+                value={todoChecklist.progressPercentage}
+              />
             </CardContent>
           </Card>
         </CardHeader>
@@ -261,7 +222,18 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
 
       <Card className="mt-10 w-full max-w-4xl border-none bg-white shadow-md">
         <CardContent className="flex flex-col items-center gap-6 pt-8 lg:flex-row">
-          <div className="flex h-40 w-40 items-center justify-center rounded-full bg-indigo-100">
+          <button
+            aria-label="赤ちゃんが生まれたら長押しまたはダブルクリックで出産後モードに切り替える"
+            className="flex h-40 w-40 transform items-center justify-center rounded-full bg-indigo-100 transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 active:scale-95"
+            onDoubleClick={handleDoubleClick}
+            onKeyDown={handleKeyDown}
+            onKeyUp={handleKeyUp}
+            onPointerCancel={handlePointerEnd}
+            onPointerDown={handlePointerDown}
+            onPointerLeave={handlePointerEnd}
+            onPointerUp={handlePointerEnd}
+            type="button"
+          >
             <svg className="h-24 w-24 text-indigo-500" viewBox="0 0 128 128">
               <title>お腹の中で丸まる赤ちゃんのアイコン</title>
               <circle
@@ -276,7 +248,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
                 fill="currentColor"
               />
             </svg>
-          </div>
+          </button>
           <div className="flex-1 space-y-3">
             <h2 className="font-semibold text-2xl">
               赤ちゃんが生まれたら、赤ちゃんアイコンを長押し
@@ -339,94 +311,31 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
         </CardContent>
       </Card>
 
-      <Card className="mt-10 w-full max-w-4xl border-none bg-white shadow-md">
-        <CardHeader className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <CardDescription className="text-indigo-500">
-              パパのTODO
-            </CardDescription>
-            <CardTitle className="font-bold text-2xl">
-              今やるべきことを整理しましょう
-            </CardTitle>
-          </div>
-          {loadError ? (
-            <p className="font-semibold text-rose-600 text-sm" role="alert">
-              {loadError}
-            </p>
-          ) : null}
-        </CardHeader>
+      <TodoChecklistSection checklist={todoChecklist} />
 
-        <CardContent>
-          {isLoading ? (
-            <p className="text-slate-500 text-sm">
-              TODOリストを読み込み中です…
-            </p>
-          ) : (
-            <>
-              <ul className="space-y-4">
-                {displayTodos.map((todo) => {
-                  const id = `pre-birth-todo-${todo.id}`;
-                  const badge =
-                    priorityTypeBadges[todo.priorityType] ??
-                    priorityTypeBadges[2];
-                  const isChecked = completedIds.includes(String(todo.id));
-
-                  return (
-                    <li key={todo.id}>
-                      <Card className="border-slate-200 p-5 shadow-sm">
-                        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                          <div className="flex items-start gap-4">
-                            <Checkbox
-                              aria-labelledby={`${id}-label`}
-                              checked={isChecked}
-                              id={id}
-                              onCheckedChange={() => handleToggleTodo(todo.id)}
-                            />
-                            <div>
-                              <Label
-                                className="font-semibold text-base text-slate-800"
-                                htmlFor={id}
-                                id={`${id}-label`}
-                              >
-                                {todo.text}
-                              </Label>
-                              <p className="mt-2 text-slate-500 text-sm">
-                                {badge.support}
-                              </p>
-                            </div>
-                          </div>
-                          <Badge className={badge.accent}>{badge.label}</Badge>
-                        </div>
-                      </Card>
-                    </li>
-                  );
-                })}
-              </ul>
-              {sortedTodos.length === 0 ? (
-                <p className="mt-6 text-slate-500 text-sm">
-                  表示できるTODOがありません。
-                </p>
-              ) : null}
-              <div className="mt-8 flex justify-center">
-                <Button
-                  className="px-5 py-3 text-sm"
-                  disabled={isShowMoreDisabled}
-                  onClick={handleShowMore}
-                  onKeyDown={(event: KeyboardEvent<HTMLButtonElement>) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      handleShowMore();
-                    }
-                  }}
-                  type="button"
-                >
-                  さらに表示
-                </Button>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
+      <Dialog onOpenChange={setConfirmOpen} open={isConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>出産後モードに切り替えますか？</DialogTitle>
+            <DialogDescription>
+              赤ちゃんが生まれたことを記録し、出産後のガイドに移動します。
+              この操作はあとから出産前モードに戻すことはできません。
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              onClick={() => setConfirmOpen(false)}
+              type="button"
+              variant="outline"
+            >
+              いいえ
+            </Button>
+            <Button onClick={handleConfirmTransition} type="button">
+              はい、切り替える
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 };
