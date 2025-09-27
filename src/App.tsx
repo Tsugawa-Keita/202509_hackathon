@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import "./App.css";
 import type { AppState } from "./lib/appState";
 import { loadStoredState } from "./lib/appState";
 import InitialSetupPage from "./pages/InitialSetupPage";
