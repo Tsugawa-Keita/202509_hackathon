@@ -209,7 +209,6 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                         <Calendar
                           buttonVariant="outline"
                           captionLayout="dropdown"
-                          // 選択不可領域（当日より前と上限日以後）
                           disabled={{
                             before: minDateObj,
                             after: MAX_DATE_VALUE,
@@ -226,6 +225,13 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                             setCalendarOpen(false);
                           }}
                           selected={selectedDate}
+                          startMonth={
+                            new Date(
+                              minDateObj.getFullYear(),
+                              minDateObj.getMonth(),
+                              1
+                            )
+                          }
                         />
                       </div>
                     )}
