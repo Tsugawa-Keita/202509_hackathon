@@ -1,4 +1,39 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "extends": ["ultracite"]
+  "extends": ["ultracite"],
+  "files": {
+    "includes": [
+      "**",
+      "!**/src/shared/components/shadcn/*.tsx",
+      "!src/index.css"
+    ]
+  },
+  "overrides": [
+    {
+      "includes": ["src/App.*"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": {
+              "level": "off",
+              "options": { "filenameCases": ["PascalCase"] }
+            }
+          }
+        }
+      }
+    },
+    {
+      // Vite環境のため next/image は未使用。
+      // slideviewer の UI に限り <img> 使用を許可して実態と整合させる。
+      // プロジェクト全体ではルールを維持し、影響範囲を最小化。
+      "includes": ["src/features/slideviewer/ui/**"],
+      "linter": {
+        "rules": {
+          "performance": {
+            "noImgElement": "off"
+          }
+        }
+      }
+    }
+  ]
 }

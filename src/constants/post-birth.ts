@@ -3,29 +3,29 @@
  */
 
 export const PAGE_CONTENT = {
-  DESCRIPTION:
+  description:
     "赤ちゃんとママのケア、そして役所への届け出をスムーズに進めましょう。今日やることをひと目で確認できます。",
-  HERO_HIGHLIGHT: "生後",
-  TITLE: "出産おめでとうございます",
+  heroHighlight: "生後",
+  title: "出産おめでとうございます",
 } as const;
 
 export const SECTION_TITLES = {
-  IMPORTANT_TASK: "最優先で済ませたい事務手続き",
-  SCHEDULE: "1日のスケジュール",
-  TASKS: "事務的タスク一覧",
+  importantTask: "最優先で済ませたい事務手続き",
+  schedule: "1日のスケジュール",
+  tasks: "事務的タスク一覧",
 } as const;
 
 export const SECTION_DESCRIPTIONS = {
-  IMPORTANT_TASK:
+  importantTask:
     "最も優先度の高いタスクです。完了していない場合は、まずここから対応しましょう。",
-  SCHEDULE:
+  schedule:
     "赤ちゃんとママのリズムを整えるためのモデルケースです。時間に縛られすぎず、目安として活用してください。",
-  TASKS:
+  tasks:
     "優先度順に並んでいます。完了した項目はチェックを入れて記録しましょう。",
 } as const;
 
 export const ANCHOR_IDS = {
-  TASKS: "administrative-tasks",
+  tasks: "administrative-tasks",
 } as const;
 
 export const POST_BIRTH_PRIORITY_BADGES: Record<

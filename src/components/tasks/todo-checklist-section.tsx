@@ -14,9 +14,9 @@ import { Label } from "@/components/ui/label";
 import {
   priorityTypeBadges as defaultPriorityTypeBadges,
   TODO_DISPLAY_STEP,
-} from "@/constants/preBirth";
-import type { AppState } from "@/lib/appState";
-import { saveAppState } from "@/lib/appState";
+} from "@/constants/pre-birth";
+import type { AppState } from "@/lib/app-state";
+import { saveAppState } from "@/lib/app-state";
 
 type TodoItem = {
   id: number;

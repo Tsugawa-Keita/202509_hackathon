@@ -9,11 +9,11 @@ export const descriptionParagraphs = [
 
 // 日付入力の制限値
 export const DATE_LIMITS = {
-  MIN_DATE: "2000-01-01",
-  MAX_DATE: "2100-12-31",
+  maxDate: "2100-12-31",
+  minDate: "2000-01-01",
 } as const;
 
 // エラーメッセージ
 export const ERROR_MESSAGES = {
-  REQUIRED_DUE_DATE: "出産予定日を入力してください。",
+  requiredDueDate: "出産予定日を入力してください。",
 } as const;

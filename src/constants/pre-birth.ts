@@ -2,16 +2,17 @@
  * 出産前ページで使用される定数
  */
 
+import { MAX_CLAMP_DAYS, MILLISECONDS_PER_DAY } from "./common";
+
 export const DATA_URL = "/pre-birth.json";
 export const TODO_DISPLAY_STEP = 5;
-export const DAY_MS = 24 * 60 * 60 * 1000;
 
 // 妊娠期間の制限値
 export const PREGNANCY_LIMITS = {
-  MAX_DAYS: 280,
-  MAX_WEEKS: 40,
-  FULL_TERM_WEEKS: 37,
-  NEAR_DUE_WEEKS: 39,
+  fullTermWeeks: 37,
+  maxDays: MAX_CLAMP_DAYS,
+  maxWeeks: 40,
+  nearDueWeeks: 39,
 } as const;
 
 // 優先度タイプのバッジ設定
@@ -38,7 +39,7 @@ export const priorityTypeBadges: Record<
 
 // 妊娠週数に基づく母親の状態管理
 export const getMotherSummaryByWeeks = (weeksPregnant: number) => {
-  if (weeksPregnant >= PREGNANCY_LIMITS.NEAR_DUE_WEEKS) {
+  if (weeksPregnant >= PREGNANCY_LIMITS.nearDueWeeks) {
     return {
       body: "前駆陣痛が増えやすく、体力の消耗も大きくなります。こまめな休息が最優先です。",
       mind: "出産への緊張と待ち遠しさが入り混じる時期です。不安を言語化できる場を用意してあげましょう。",
@@ -48,7 +49,7 @@ export const getMotherSummaryByWeeks = (weeksPregnant: number) => {
     };
   }
 
-  if (weeksPregnant >= PREGNANCY_LIMITS.FULL_TERM_WEEKS) {
+  if (weeksPregnant >= PREGNANCY_LIMITS.fullTermWeeks) {
     return {
       body: "お腹の張りが強まり、腰痛や睡眠の質低下が目立つ時期です。",
       mind: "出産に向けた実感が高まりつつ、気持ちが揺らぎやすくなります。",
@@ -66,3 +67,5 @@ export const getMotherSummaryByWeeks = (weeksPregnant: number) => {
     title: "産前1ヶ月のママの状態",
   };
 };
+
+export const MILLISECONDS_PER_PREGNANCY_DAY = MILLISECONDS_PER_DAY;

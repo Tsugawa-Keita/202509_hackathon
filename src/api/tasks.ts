@@ -1,9 +1,10 @@
 import useSwr from "swr";
-import type { TodoItem } from "@/components/tasks/TodoChecklistSection";
+
+import type { TodoItem } from "@/components/tasks/todo-checklist-section";
 import {
   POST_BIRTH_SCHEDULE,
   POST_BIRTH_TODOS,
-} from "@/constants/postBirthData";
+} from "@/constants/post-birth-data";
 import { fetcher } from "@/lib/fetcher";
 
 const TASKS_ENDPOINT = "https://hackathon202509-backend.onrender.com/tasks";
@@ -54,10 +55,14 @@ const STATIC_SCHEDULE_FALLBACK: ScheduleItem[] = POST_BIRTH_SCHEDULE.map(
   })
 );
 
-STATIC_TODO_FALLBACK.forEach((todo) => Object.freeze(todo));
+for (const todo of STATIC_TODO_FALLBACK) {
+  Object.freeze(todo);
+}
 Object.freeze(STATIC_TODO_FALLBACK);
 
-STATIC_SCHEDULE_FALLBACK.forEach((entry) => Object.freeze(entry));
+for (const entry of STATIC_SCHEDULE_FALLBACK) {
+  Object.freeze(entry);
+}
 Object.freeze(STATIC_SCHEDULE_FALLBACK);
 
 const fetchTodoList = async (path: string) => {
@@ -101,7 +106,7 @@ export const usePostBirthTasks = () =>
         }
 
         return remote;
-      } catch (error) {
+      } catch (_error) {
         return STATIC_TODO_FALLBACK;
       }
     },
@@ -122,7 +127,7 @@ export const useSchedule = () =>
         }
 
         return remote;
-      } catch (error) {
+      } catch (_error) {
         return STATIC_SCHEDULE_FALLBACK;
       }
     },

@@ -1,5 +1,5 @@
-import type { TodoItem } from "@/components/tasks/TodoChecklistSection";
 import type { ScheduleItem } from "@/api/tasks";
+import type { TodoItem } from "@/components/tasks/todo-checklist-section";
 
 const POST_BIRTH_TODOS = [
   {

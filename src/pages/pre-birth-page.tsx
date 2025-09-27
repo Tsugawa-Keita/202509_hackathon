@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSyncTasks } from "@/api/tasks";
 import TodoChecklistSection, {
   useTodoChecklist,
-} from "@/components/tasks/TodoChecklistSection";
+} from "@/components/tasks/todo-checklist-section";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,12 +24,12 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { clampDays, createDisplayDate } from "../constants/common";
 import {
-  DAY_MS,
+  MILLISECONDS_PER_PREGNANCY_DAY,
   getMotherSummaryByWeeks,
   PREGNANCY_LIMITS,
-} from "../constants/preBirth";
-import type { AppState } from "../lib/appState";
-import { saveAppState } from "../lib/appState";
+} from "../constants/pre-birth";
+import type { AppState } from "../lib/app-state";
+import { saveAppState } from "../lib/app-state";
 
 type PreBirthPageProps = {
   onStateChange?: (nextState: AppState) => void;
@@ -151,19 +151,21 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
       return 0;
     }
 
-    const diff = Math.ceil((dueTime - Date.now()) / DAY_MS);
+    const diff = Math.ceil(
+      (dueTime - Date.now()) / MILLISECONDS_PER_PREGNANCY_DAY
+    );
     return clampDays(diff);
   }, [state.dueDate]);
 
   const weeksPregnant = useMemo(() => {
     const estimatedWeeks =
-      PREGNANCY_LIMITS.MAX_WEEKS - Math.ceil(daysUntilDue / DAYS_PER_WEEK);
+      PREGNANCY_LIMITS.maxWeeks - Math.ceil(daysUntilDue / DAYS_PER_WEEK);
     if (estimatedWeeks < 0) {
       return 0;
     }
 
-    if (estimatedWeeks > PREGNANCY_LIMITS.MAX_WEEKS) {
-      return PREGNANCY_LIMITS.MAX_WEEKS;
+    if (estimatedWeeks > PREGNANCY_LIMITS.maxWeeks) {
+      return PREGNANCY_LIMITS.maxWeeks;
     }
 
     return estimatedWeeks;

@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import type { AppState } from "./lib/appState";
-import { loadStoredState } from "./lib/appState";
-import InitialSetupPage from "./pages/InitialSetupPage";
-import PostBirthPage from "./pages/PostBirthPage";
-import PreBirthPage from "./pages/PreBirthPage";
+import type { AppState } from "./lib/app-state";
+import { loadStoredState } from "./lib/app-state";
+import InitialSetupPage from "./pages/initial-setup-page";
+import PostBirthPage from "./pages/post-birth-page";
+import PreBirthPage from "./pages/pre-birth-page";
 
 const App = () => {
   const [state, setState] = useState<AppState | null>(() => loadStoredState());

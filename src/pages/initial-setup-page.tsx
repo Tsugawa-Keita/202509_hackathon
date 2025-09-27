@@ -14,18 +14,18 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DATE_LIMITS, ERROR_MESSAGES } from "../constants/initialSetup";
-import type { AppState } from "../lib/appState";
-import { createInitialState, saveAppState } from "../lib/appState";
+import { DATE_LIMITS, ERROR_MESSAGES } from "../constants/initial-setup";
+import type { AppState } from "../lib/app-state";
+import { createInitialState, saveAppState } from "../lib/app-state";
 
-const RANGE_GUIDANCE_MESSAGE = `${DATE_LIMITS.MIN_DATE} から ${DATE_LIMITS.MAX_DATE} の間で入力してください。`;
+const RANGE_GUIDANCE_MESSAGE = `${DATE_LIMITS.minDate} から ${DATE_LIMITS.maxDate} の間で入力してください。`;
 
 type InitialSetupPageProps = {
   onConfigured?: (nextState: AppState) => void;
 };
 
-const MIN_DATE_VALUE = parseISO(DATE_LIMITS.MIN_DATE);
-const MAX_DATE_VALUE = parseISO(DATE_LIMITS.MAX_DATE);
+const MIN_DATE_VALUE = parseISO(DATE_LIMITS.minDate);
+const MAX_DATE_VALUE = parseISO(DATE_LIMITS.maxDate);
 
 const formatIsoDate = (date: Date) => format(date, "yyyy-MM-dd");
 
@@ -84,7 +84,7 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!dueDate) {
-      setErrorMessage(ERROR_MESSAGES.REQUIRED_DUE_DATE);
+      setErrorMessage(ERROR_MESSAGES.requiredDueDate);
       return;
     }
 
@@ -135,8 +135,8 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                   </Label>
                   <Input
                     id="due-date"
-                    max={DATE_LIMITS.MAX_DATE}
-                    min={DATE_LIMITS.MIN_DATE}
+                    max={DATE_LIMITS.maxDate}
+                    min={DATE_LIMITS.minDate}
                     name="due-date"
                     onChange={handleChange}
                     type="date"
