@@ -26,7 +26,10 @@ export const parseStoredState = (rawValue: string): AppState | null => {
     }
 
     const completedTodos = Array.isArray(parsed.completedTodos)
-      ? parsed.completedTodos.filter((value): value is string => typeof value === "string" && value.length > 0)
+      ? parsed.completedTodos.filter(
+          (value): value is string =>
+            typeof value === "string" && value.length > 0
+        )
       : [];
 
     return {
