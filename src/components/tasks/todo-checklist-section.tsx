@@ -75,11 +75,14 @@ export const useTodoChecklist = ({
 
     const copy = [...todos];
     copy.sort((left, right) => {
-      if (right.priority === left.priority) {
-        return left.id - right.id;
+      // priorityType 昇順 → priority 昇順 → id 昇順
+      if (left.priorityType !== right.priorityType) {
+        return left.priorityType - right.priorityType;
       }
-
-      return right.priority - left.priority;
+      if (left.priority !== right.priority) {
+        return left.priority - right.priority;
+      }
+      return left.id - right.id;
     });
 
     return copy;
