@@ -1,5 +1,11 @@
 import { format, isValid, parseISO } from "date-fns";
-import { type ChangeEvent, type FormEvent, useMemo, useState } from "react";
+import {
+  type ChangeEvent,
+  type FormEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
@@ -14,17 +20,27 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DATE_LIMITS, ERROR_MESSAGES } from "../constants/initial-setup";
+import {
+  buildRangeError,
+  DATE_LIMITS,
+  ERROR_MESSAGES,
+} from "../constants/initial-setup";
 import type { AppState } from "../lib/app-state";
 import { createInitialState, saveAppState } from "../lib/app-state";
 
-const RANGE_GUIDANCE_MESSAGE = `${DATE_LIMITS.minDate} から ${DATE_LIMITS.maxDate} の間で入力してください。`;
+// 本日のローカル日付を ISO (yyyy-MM-dd) で返す
+const getTodayIso = () => {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = `${now.getMonth() + 1}`.padStart(2, "0");
+  const d = `${now.getDate()}`.padStart(2, "0");
+  return `${y}-${m}-${d}`;
+};
 
 type InitialSetupPageProps = {
   onConfigured?: (nextState: AppState) => void;
 };
 
-const MIN_DATE_VALUE = parseISO(DATE_LIMITS.minDate);
 const MAX_DATE_VALUE = parseISO(DATE_LIMITS.maxDate);
 
 const formatIsoDate = (date: Date) => format(date, "yyyy-MM-dd");
@@ -46,6 +62,29 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   const navigate = useNavigate();
   const [dueDate, setDueDate] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [todayIso, setTodayIso] = useState(getTodayIso);
+  const [isCalendarOpen, setCalendarOpen] = useState(false);
+  const [isCoarsePointer, setCoarsePointer] = useState(false);
+
+  // 0時に最小日付を自動更新
+  useEffect(() => {
+    const now = new Date();
+    const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const t = window.setTimeout(() => setTodayIso(getTodayIso()), +next - +now);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  // モバイル（coarse pointer）検出で挙動分岐
+  useEffect(() => {
+    if (!window.matchMedia) {
+      return;
+    }
+    const mql = window.matchMedia("(pointer: coarse)");
+    const update = () => setCoarsePointer(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
 
   const selectedDate = useMemo(() => parseDueDate(dueDate), [dueDate]);
   const selectedDateLabel = useMemo(
@@ -53,14 +92,24 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
     [selectedDate]
   );
 
+  const minDateObj = useMemo(() => parseISO(todayIso), [todayIso]);
+
   const isWithinAllowedRange = (date: Date) => {
     const time = date.getTime();
-    return time >= MIN_DATE_VALUE.getTime() && time <= MAX_DATE_VALUE.getTime();
+    return time >= minDateObj.getTime() && time <= MAX_DATE_VALUE.getTime();
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setDueDate(event.target.value);
-    if (errorMessage) {
+    const next = event.target.value;
+    setDueDate(next);
+    // 入力即時で範囲チェック（ISO文字列の辞書順比較でOK）
+    if (!next) {
+      setErrorMessage("");
+      return;
+    }
+    if (next < todayIso || next > DATE_LIMITS.maxDate) {
+      setErrorMessage(buildRangeError(todayIso, DATE_LIMITS.maxDate));
+    } else {
       setErrorMessage("");
     }
   };
@@ -75,8 +124,12 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
       return;
     }
 
-    setDueDate(formatIsoDate(nextDate));
-    if (errorMessage) {
+    const nextIso = formatIsoDate(nextDate);
+    setDueDate(nextIso);
+    // カレンダー選択も即時バリデーション
+    if (nextIso < todayIso || nextIso > DATE_LIMITS.maxDate) {
+      setErrorMessage(buildRangeError(todayIso, DATE_LIMITS.maxDate));
+    } else {
       setErrorMessage("");
     }
   };
@@ -90,12 +143,12 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
 
     const validatedDate = parseDueDate(dueDate);
     if (!validatedDate) {
-      setErrorMessage(RANGE_GUIDANCE_MESSAGE);
+      setErrorMessage(buildRangeError(todayIso, DATE_LIMITS.maxDate));
       return;
     }
 
     if (!isWithinAllowedRange(validatedDate)) {
-      setErrorMessage(RANGE_GUIDANCE_MESSAGE);
+      setErrorMessage(buildRangeError(todayIso, DATE_LIMITS.maxDate));
       return;
     }
 
@@ -121,7 +174,6 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
           </CardHeader>
           <CardContent className="pt-6 pb-10">
             <form
-              aria-describedby="due-date-guidance"
               className="flex h-fit flex-col gap-6 rounded-2xl border border-border bg-background p-5 shadow-sm sm:p-7"
               onSubmit={handleSubmit}
             >
@@ -134,29 +186,54 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                     出産予定日
                   </Label>
                   <Input
+                    aria-describedby="due-date-guidance due-date-error"
                     id="due-date"
                     max={DATE_LIMITS.maxDate}
-                    min={DATE_LIMITS.minDate}
+                    min={todayIso}
                     name="due-date"
                     onChange={handleChange}
                     type="date"
                     value={dueDate}
                   />
                 </div>
-                <div className="rounded-xl border border-border bg-muted p-4">
-                  <Calendar
-                    buttonVariant="outline"
-                    captionLayout="dropdown"
-                    mode="single"
-                    onSelect={handleCalendarSelect}
-                    selected={selectedDate}
-                  />
-                </div>
+                {/* デスクトップのみカスタムカレンダーをポップアップで表示 */}
+                {!isCoarsePointer && (
+                  <div className="relative">
+                    <Button
+                      onClick={() => setCalendarOpen((v) => !v)}
+                      type="button"
+                      variant="outline"
+                    >
+                      カレンダーを開く
+                    </Button>
+                    {isCalendarOpen && (
+                      <div className="absolute z-50 mt-2 rounded-xl border border-border bg-muted p-4">
+                        <Calendar
+                          buttonVariant="outline"
+                          captionLayout="dropdown"
+                          disabled={{
+                            before: minDateObj,
+                            after: MAX_DATE_VALUE,
+                          }}
+                          fromDate={minDateObj}
+                          mode="single"
+                          onSelect={(d) => {
+                            handleCalendarSelect(d);
+                            setCalendarOpen(false);
+                          }}
+                          selected={selectedDate}
+                          // 範囲制約（選択不可領域を無効化）
+                          toDate={MAX_DATE_VALUE}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
                 <p
                   className="text-muted-foreground text-xs"
                   id="due-date-guidance"
                 >
-                  {RANGE_GUIDANCE_MESSAGE}
+                  {buildRangeError(todayIso, DATE_LIMITS.maxDate)}
                 </p>
                 {selectedDate ? (
                   <p
@@ -167,15 +244,16 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                     {formatIsoDate(selectedDate)})
                   </p>
                 ) : null}
+                {errorMessage ? (
+                  <p
+                    className="font-semibold text-destructive text-sm"
+                    id="due-date-error"
+                    role="alert"
+                  >
+                    {errorMessage}
+                  </p>
+                ) : null}
               </div>
-              {errorMessage ? (
-                <p
-                  className="font-semibold text-destructive text-sm"
-                  role="alert"
-                >
-                  {errorMessage}
-                </p>
-              ) : null}
               <Button className="h-11 text-base" type="submit">
                 保存して始める
               </Button>
