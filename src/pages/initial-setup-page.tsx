@@ -1,5 +1,4 @@
 import { format, isValid, parseISO } from "date-fns";
-import { ja } from "date-fns/locale";
 import {
   type ChangeEvent,
   type FormEvent,
@@ -85,10 +84,6 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   }, []);
 
   const selectedDate = useMemo(() => parseDueDate(dueDate), [dueDate]);
-  const selectedDateLabel = useMemo(
-    () => (selectedDate ? format(selectedDate, "PPP", { locale: ja }) : ""),
-    [selectedDate]
-  );
 
   const minDateObj = useMemo(() => parseISO(todayIso), [todayIso]);
 
@@ -237,15 +232,6 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                     )}
                   </div>
                 )}
-                {selectedDate ? (
-                  <p
-                    aria-live="polite"
-                    className="font-medium text-muted-foreground text-xs"
-                  >
-                    選択中の日付: {selectedDateLabel} (
-                    {formatIsoDate(selectedDate)})
-                  </p>
-                ) : null}
                 {errorMessage ? (
                   <p
                     className="font-semibold text-destructive text-sm"

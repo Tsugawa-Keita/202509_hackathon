@@ -24,8 +24,8 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { clampDays, createDisplayDate } from "../constants/common";
 import {
-  MILLISECONDS_PER_PREGNANCY_DAY,
   getMotherSummaryByWeeks,
+  MILLISECONDS_PER_PREGNANCY_DAY,
   PREGNANCY_LIMITS,
 } from "../constants/pre-birth";
 import type { AppState } from "../lib/app-state";
@@ -40,7 +40,6 @@ const DAYS_PER_WEEK = 7;
 const LONG_PRESS_DURATION_MS = 800;
 
 const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
-  // debug用絶対消さないこと
   const {
     data: tasks,
     error: tasksError,
@@ -180,10 +179,6 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
     [state.dueDate]
   );
 
-  // useEffect(() => {
-  //   console.log(tasks);
-  // }, [tasks]);
-
   return (
     <main className="flex min-h-screen flex-col items-center bg-slate-100 px-6 py-12 text-slate-900">
       <Card className="w-full max-w-4xl border-none bg-white shadow-md">
@@ -225,7 +220,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
       <Card className="mt-10 w-full max-w-4xl border-none bg-white shadow-md">
         <CardContent className="flex flex-col items-center gap-6 pt-8 lg:flex-row">
           <button
-            aria-label="赤ちゃんが生まれたら長押しまたはダブルクリックで出産後モードに切り替える"
+            aria-label="赤ちゃんが生まれたら長押しで出産後モードに切り替える"
             className="flex h-40 w-40 transform items-center justify-center rounded-full bg-indigo-100 transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 active:scale-95"
             onDoubleClick={handleDoubleClick}
             onKeyDown={handleKeyDown}
@@ -236,27 +231,20 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
             onPointerUp={handlePointerEnd}
             type="button"
           >
-            <svg className="h-24 w-24 text-indigo-500" viewBox="0 0 128 128">
-              <title>お腹の中で丸まる赤ちゃんのアイコン</title>
-              <circle
-                cx="64"
-                cy="64"
-                fill="currentColor"
-                opacity="0.15"
-                r="60"
-              />
-              <path
-                d="M86 55a22 22 0 0 0-44 0v18a14 14 0 0 0 28 0v-6a6 6 0 1 1 12 0v6a26 26 0 0 1-52 0V55a34 34 0 1 1 68 0v12a6 6 0 0 1-12 0z"
-                fill="currentColor"
-              />
-            </svg>
+            <img
+              alt="胎内で丸まる赤ちゃんのイラスト"
+              className="h-24 w-24 object-contain"
+              height={400}
+              src="/taiji.png"
+              width={375}
+            />
           </button>
           <div className="flex-1 space-y-3">
             <h2 className="font-semibold text-2xl">
               赤ちゃんが生まれたら、赤ちゃんアイコンを長押し
             </h2>
             <p className="text-base text-slate-600 leading-relaxed">
-              生まれた瞬間をアプリに記録する準備をしておきましょう。赤ちゃんが誕生したら、このアイコンを長押しすることで出産後モードへ切り替える予定です。
+              生まれた瞬間をアプリに記録する準備をしておきましょう。赤ちゃんが誕生したら、このアイコンを長押しすることで出産後モードへ切り替える可能です。
             </p>
           </div>
         </CardContent>
@@ -321,7 +309,6 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
             <DialogTitle>出産後モードに切り替えますか？</DialogTitle>
             <DialogDescription>
               赤ちゃんが生まれたことを記録し、出産後のガイドに移動します。
-              この操作はあとから出産前モードに戻すことはできません。
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

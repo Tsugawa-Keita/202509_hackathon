@@ -10,9 +10,9 @@ export const PAGE_CONTENT = {
 } as const;
 
 export const SECTION_TITLES = {
-  importantTask: "最優先で済ませたい事務手続き",
+  importantTask: "最優先TODO",
   schedule: "1日のスケジュール",
-  tasks: "事務的タスク一覧",
+  tasks: "TODOリスト",
 } as const;
 
 export const SECTION_DESCRIPTIONS = {

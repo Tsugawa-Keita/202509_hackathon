@@ -26,7 +26,7 @@
       // Vite環境のため next/image は未使用。
       // slideviewer の UI に限り <img> 使用を許可して実態と整合させる。
       // プロジェクト全体ではルールを維持し、影響範囲を最小化。
-      "includes": ["src/features/slideviewer/ui/**"],
+      "includes": ["src/**"],
       "linter": {
         "rules": {
           "performance": {
