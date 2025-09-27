@@ -58,16 +58,13 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
             <input
               className="rounded-md border border-slate-300 px-3 py-2 text-base shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
               id="due-date"
-              max="9999-12-31"
-              min="1900-01-01"
+              max="2100-12-31"
+              min="2000-01-01"
               name="due-date"
               onChange={handleChange}
               type="date"
               value={dueDate}
             />
-            <p className="text-slate-500 text-xs">
-              ※ 保存した情報はご利用のブラウザにのみ保存されます。
-            </p>
           </div>
           {errorMessage ? (
             <p className="font-semibold text-rose-600 text-sm" role="alert">

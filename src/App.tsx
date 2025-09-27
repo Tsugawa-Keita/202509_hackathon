@@ -4,12 +4,13 @@ import "./App.css";
 import type { AppState } from "./lib/appState";
 import { loadStoredState } from "./lib/appState";
 import InitialSetupPage from "./pages/InitialSetupPage";
-import MainPage from "./pages/MainPage";
+import PostBirthPage from "./pages/PostBirthPage";
+import PreBirthPage from "./pages/PreBirthPage";
 
 const App = () => {
   const [state, setState] = useState<AppState | null>(() => loadStoredState());
 
-  const handleConfigured = useCallback((nextState: AppState) => {
+  const handleStateReplace = useCallback((nextState: AppState) => {
     setState(nextState);
   }, []);
 
@@ -19,7 +20,12 @@ const App = () => {
         <Route
           element={
             state ? (
-              <MainPage state={state} />
+              <Navigate
+                replace
+                to={
+                  state.appState === "post-birth" ? "/post-birth" : "/pre-birth"
+                }
+              />
             ) : (
               <Navigate replace to="/setup" />
             )
@@ -31,13 +37,44 @@ const App = () => {
             state ? (
               <Navigate replace to="/" />
             ) : (
-              <InitialSetupPage onConfigured={handleConfigured} />
+              <InitialSetupPage onConfigured={handleStateReplace} />
             )
           }
           path="/setup"
         />
         <Route
-          element={<Navigate replace to={state ? "/" : "/setup"} />}
+          element={
+            state ? (
+              <PreBirthPage onStateChange={handleStateReplace} state={state} />
+            ) : (
+              <Navigate replace to="/setup" />
+            )
+          }
+          path="/pre-birth"
+        />
+        <Route
+          element={
+            state ? (
+              <PostBirthPage state={state} />
+            ) : (
+              <Navigate replace to="/setup" />
+            )
+          }
+          path="/post-birth"
+        />
+        <Route
+          element={
+            state ? (
+              <Navigate
+                replace
+                to={
+                  state.appState === "post-birth" ? "/post-birth" : "/pre-birth"
+                }
+              />
+            ) : (
+              <Navigate replace to="/setup" />
+            )
+          }
           path="*"
         />
       </Routes>
