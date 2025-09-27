@@ -158,11 +158,8 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
       <div className="mx-auto w-full max-w-2xl px-4 sm:px-6">
         <Card className="border border-border bg-background text-card-foreground shadow-xl">
           <CardHeader className="gap-2 pb-0">
-            <Badge className="w-fit" variant="secondary">
-              STEP 1
-            </Badge>
-            <CardTitle className="font-semibold text-3xl md:text-[2.75rem]">
-              出産予定日を登録しましょう
+            <CardTitle className="font-semibold text-xl md:text-[2.75rem]">
+              まずは出産予定日の登録をしましょう
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-6 pb-10">
