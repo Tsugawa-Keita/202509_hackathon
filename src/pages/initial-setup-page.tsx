@@ -1,4 +1,5 @@
 import { format, isValid, parseISO } from "date-fns";
+import { ja } from "date-fns/locale";
 import {
   type ChangeEvent,
   type FormEvent,
@@ -11,13 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -44,6 +39,9 @@ type InitialSetupPageProps = {
 const MAX_DATE_VALUE = parseISO(DATE_LIMITS.maxDate);
 
 const formatIsoDate = (date: Date) => format(date, "yyyy-MM-dd");
+
+// DayPicker の月インデックスは 0=1月 ... 11=12月
+const MONTH_INDEX_DECEMBER = 11;
 
 const parseDueDate = (value: string) => {
   if (!value) {
@@ -88,7 +86,7 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
 
   const selectedDate = useMemo(() => parseDueDate(dueDate), [dueDate]);
   const selectedDateLabel = useMemo(
-    () => (selectedDate ? format(selectedDate, "PPP") : ""),
+    () => (selectedDate ? format(selectedDate, "PPP", { locale: ja }) : ""),
     [selectedDate]
   );
 
@@ -163,7 +161,7 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   return (
     <main className="min-h-dvh bg-background py-12 text-foreground md:py-20">
       <div className="mx-auto w-full max-w-2xl px-4 sm:px-6">
-        <Card className="border border-border bg-card text-card-foreground shadow-xl">
+        <Card className="border border-border bg-background text-card-foreground shadow-xl">
           <CardHeader className="gap-2 pb-0">
             <Badge className="w-fit" variant="secondary">
               STEP 1
@@ -211,30 +209,28 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                         <Calendar
                           buttonVariant="outline"
                           captionLayout="dropdown"
+                          // 選択不可領域（当日より前と上限日以後）
                           disabled={{
                             before: minDateObj,
                             after: MAX_DATE_VALUE,
                           }}
-                          fromDate={minDateObj}
+                          endMonth={
+                            new Date(
+                              MAX_DATE_VALUE.getFullYear(),
+                              MONTH_INDEX_DECEMBER
+                            )
+                          }
                           mode="single"
                           onSelect={(d) => {
                             handleCalendarSelect(d);
                             setCalendarOpen(false);
                           }}
                           selected={selectedDate}
-                          // 範囲制約（選択不可領域を無効化）
-                          toDate={MAX_DATE_VALUE}
                         />
                       </div>
                     )}
                   </div>
                 )}
-                <p
-                  className="text-muted-foreground text-xs"
-                  id="due-date-guidance"
-                >
-                  {buildRangeError(todayIso, DATE_LIMITS.maxDate)}
-                </p>
                 {selectedDate ? (
                   <p
                     aria-live="polite"
@@ -259,14 +255,6 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
               </Button>
             </form>
           </CardContent>
-          <CardFooter className="flex flex-col gap-2 border-border border-t bg-muted/60 px-5 py-6 text-muted-foreground text-sm sm:px-7">
-            <p>
-              登録が完了すると、ダッシュボードで必要な準備タスクが解放されます。
-            </p>
-            <p>
-              情報はすべて端末内に保存され、ハッカソン期間中いつでもリセット可能です。
-            </p>
-          </CardFooter>
         </Card>
       </div>
     </main>
