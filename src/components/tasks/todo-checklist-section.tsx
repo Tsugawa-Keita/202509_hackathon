@@ -35,6 +35,7 @@ type UseTodoChecklistArgs = {
 
 type TodoChecklistState = {
   completedCount: number;
+  completedTodos: TodoItem[];
   completedIdSet: Set<string>;
   displayTodos: TodoItem[];
   handleShowMore: () => void;
@@ -124,6 +125,12 @@ export const useTodoChecklist = ({
     );
   }, [completedIdSet, sortedTodos]);
 
+  const completedTodos = useMemo(
+    () =>
+      sortedTodos.filter((todo) => completedIdSet.has(String(todo.id))),
+    [completedIdSet, sortedTodos]
+  );
+
   const progressPercentage = useMemo(() => {
     if (sortedTodos.length === 0) {
       return 0;
@@ -180,6 +187,7 @@ export const useTodoChecklist = ({
 
   return {
     completedCount,
+    completedTodos,
     completedIdSet,
     displayTodos,
     handleShowMore,
@@ -218,6 +226,8 @@ const TodoChecklistSection = ({
 }: TodoChecklistSectionProps) => {
   const {
     completedIdSet,
+    completedTodos,
+    completedCount,
     displayTodos,
     handleShowMore,
     handleToggleTodo,
@@ -237,6 +247,8 @@ const TodoChecklistSection = ({
   const headerTitle = title ?? "今やるべきことを整理しましょう";
   const resolvedEmptyMessage = emptyMessage ?? "表示できるTODOがありません。";
   const resolvedShowMoreLabel = showMoreLabel ?? "さらに表示";
+  const [isCompletedOpen, setCompletedOpen] = useState(false);
+  const completedListId = `${idPrefix}-completed-list`;
 
   return (
     <Card
@@ -321,6 +333,69 @@ const TodoChecklistSection = ({
                 {resolvedShowMoreLabel}
               </Button>
             </div>
+            {completedTodos.length > 0 ? (
+              <section className="mt-10 border-t border-slate-200 pt-6">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-semibold text-slate-700 text-sm">
+                    完了したタスク（{completedCount}件）
+                  </h3>
+                  <Button
+                    aria-controls={completedListId}
+                    aria-expanded={isCompletedOpen}
+                    className="px-3 py-2 text-xs"
+                    onClick={() => setCompletedOpen((prev) => !prev)}
+                    type="button"
+                    variant="secondary"
+                  >
+                    {isCompletedOpen ? "非表示" : "表示"}
+                  </Button>
+                </div>
+                {isCompletedOpen ? (
+                  <ul
+                    className="mt-4 space-y-3"
+                    id={completedListId}
+                  >
+                    {completedTodos.map((todo) => {
+                      const id = `${idPrefix}-completed-${todo.id}`;
+                      const badge =
+                        priorityBadges[todo.priorityType] ?? fallbackBadge;
+
+                      return (
+                        <li key={todo.id}>
+                          <Card className="border-slate-100 bg-slate-50 p-4 shadow-sm">
+                            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                              <div className="flex items-start gap-4">
+                                <Checkbox
+                                  aria-labelledby={`${id}-label`}
+                                  checked
+                                  id={id}
+                                  onCheckedChange={() => handleToggleTodo(todo.id)}
+                                />
+                                <div>
+                                  <Label
+                                    className="font-semibold text-base text-slate-500 line-through"
+                                    htmlFor={id}
+                                    id={`${id}-label`}
+                                  >
+                                    {todo.text}
+                                  </Label>
+                                  <p className="mt-2 text-slate-400 text-sm">
+                                    {badge.support}
+                                  </p>
+                                </div>
+                              </div>
+                              <Badge className={`${badge.accent} opacity-70`}>
+                                {badge.label}
+                              </Badge>
+                            </div>
+                          </Card>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : null}
+              </section>
+            ) : null}
           </>
         )}
       </CardContent>
