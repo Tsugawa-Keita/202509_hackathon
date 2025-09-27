@@ -1,3 +1,11 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { PAGE_CONTENT, SUMMARY_LABELS } from "../constants/postBirth";
 import type { AppState } from "../lib/appState";
 
 type PostBirthPageProps = {
@@ -6,36 +14,41 @@ type PostBirthPageProps = {
 
 const PostBirthPage = ({ state }: PostBirthPageProps) => {
   const summaryItems = [
-    { label: "出産予定日", value: state.dueDate },
+    { label: SUMMARY_LABELS.DUE_DATE, value: state.dueDate },
     {
-      label: "完了したTODO数",
+      label: SUMMARY_LABELS.COMPLETED_TODOS,
       value: String(state.completedTodos.length),
     },
   ];
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-slate-100 px-6 py-12 text-slate-900">
-      <section className="w-full max-w-2xl rounded-lg bg-white p-10 shadow-md">
-        <h1 className="font-bold text-3xl">出産後ダッシュボードは準備中です</h1>
-        <p className="mt-4 text-base leading-relaxed">
-          出産後フェーズ向けの体験を開発中です。現在保存している情報は以下の通りです。
-        </p>
-        <ul className="mt-6 space-y-3">
-          {summaryItems.map((item) => (
-            <li
-              className="flex items-center justify-between rounded-md bg-slate-50 px-4 py-3 shadow-sm"
-              key={item.label}
-            >
-              <span className="font-semibold text-slate-600 text-sm">
-                {item.label}
-              </span>
-              <span className="font-bold text-base text-slate-900">
-                {item.value}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <Card className="w-full max-w-2xl border-none bg-white shadow-md">
+        <CardHeader>
+          <CardTitle className="font-bold text-3xl">
+            {PAGE_CONTENT.TITLE}
+          </CardTitle>
+          <CardDescription className="text-base text-slate-600 leading-relaxed">
+            {PAGE_CONTENT.DESCRIPTION}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-3">
+            {summaryItems.map((item) => (
+              <li key={item.label}>
+                <Card className="flex flex-row items-center justify-between gap-0 border-slate-100 px-4 py-3 shadow-sm">
+                  <span className="font-semibold text-slate-600 text-sm">
+                    {item.label}
+                  </span>
+                  <span className="font-bold text-base text-slate-900">
+                    {item.value}
+                  </span>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
     </main>
   );
 };
