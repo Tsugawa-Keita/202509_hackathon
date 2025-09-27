@@ -7,13 +7,15 @@ import {
 } from "@/constants/post-birth-data";
 import { fetcher } from "@/lib/fetcher";
 
-const TASKS_ENDPOINT = "https://hackathon202509-backend.onrender.com/tasks";
-
 type ScheduleItem = {
   id: number;
   text: string;
   time: string;
 };
+
+const API_PATH = '/tasks'
+
+const endpoint = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}${API_PATH}`;
 
 const isValidTodoItem = (value: unknown): value is TodoItem => {
   if (!value || typeof value !== "object") {
@@ -66,7 +68,7 @@ for (const entry of STATIC_SCHEDULE_FALLBACK) {
 Object.freeze(STATIC_SCHEDULE_FALLBACK);
 
 const fetchTodoList = async (path: string) => {
-  const raw = await fetcher<unknown>(`${TASKS_ENDPOINT}/${path}`);
+  const raw = await fetcher<unknown>(`${endpoint}/${path}`);
   if (!Array.isArray(raw)) {
     throw new Error("Invalid todo payload");
   }
@@ -76,7 +78,7 @@ const fetchTodoList = async (path: string) => {
 };
 
 const fetchSchedule = async () => {
-  const raw = await fetcher<unknown>(`${TASKS_ENDPOINT}/schedule`);
+  const raw = await fetcher<unknown>(`${endpoint}/schedule`);
   if (!Array.isArray(raw)) {
     throw new Error("Invalid schedule payload");
   }
@@ -85,9 +87,9 @@ const fetchSchedule = async () => {
   return parsed;
 };
 
-export function useSyncTasks(path = "pre-birth") {
+export function useSyncTasks(path = "pre_birth") {
   return useSwr<TodoItem[]>(
-    `${TASKS_ENDPOINT}/${path}`,
+    `${endpoint}/${path}`,
     () => fetchTodoList(path),
     {
       revalidateOnFocus: false,
@@ -97,10 +99,10 @@ export function useSyncTasks(path = "pre-birth") {
 
 export const usePostBirthTasks = () =>
   useSwr<TodoItem[]>(
-    `${TASKS_ENDPOINT}/post-birth`,
+    `${endpoint}/post_birth`,
     async () => {
       try {
-        const remote = await fetchTodoList("post-birth");
+        const remote = await fetchTodoList("post_birth");
         if (remote.length === 0) {
           throw new Error("Empty todo payload");
         }
@@ -118,7 +120,7 @@ export const usePostBirthTasks = () =>
 
 export const useSchedule = () =>
   useSwr<ScheduleItem[]>(
-    `${TASKS_ENDPOINT}/schedule`,
+    `${endpoint}/schedule`,
     async () => {
       try {
         const remote = await fetchSchedule();
