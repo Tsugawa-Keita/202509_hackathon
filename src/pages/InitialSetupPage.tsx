@@ -1,36 +1,21 @@
-import { ChangeEvent, FormEvent, useMemo, useState } from "react";
-
-type AppPhase = "pre-birth" | "post-birth";
-
-export type AppState = {
-  appState: AppPhase;
-  completedTodos: string[];
-  dueDate: string;
-};
-
-export const STORAGE_KEY = "papasapoAppState";
-
-const createInitialState = (dueDate: string): AppState => ({
-  appState: "pre-birth",
-  completedTodos: [],
-  dueDate,
-});
-
-type InitialSetupPageProps = {
-  onConfigured?: (nextState: AppState) => void;
-};
+import { type ChangeEvent, type FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import type { AppState } from "../lib/appState";
+import { createInitialState, saveAppState } from "../lib/appState";
 
 const descriptionParagraphs = [
   "出産予定日を登録すると、出産前後の1ヶ月間に必要なTODOや情報を受け取れます。",
   "登録した情報はお使いの端末にのみ保存されるので、安心してご利用ください。",
 ] as const;
 
+type InitialSetupPageProps = {
+  onConfigured?: (nextState: AppState) => void;
+};
+
 const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
+  const navigate = useNavigate();
   const [dueDate, setDueDate] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isSaved, setIsSaved] = useState(false);
-
-  const paragraphs = useMemo(() => [...descriptionParagraphs], []);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setDueDate(event.target.value);
@@ -47,20 +32,19 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
     }
 
     const nextState = createInitialState(dueDate);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
+    saveAppState(nextState);
     if (onConfigured) {
       onConfigured(nextState);
-      return;
     }
-    setIsSaved(true);
+    navigate("/", { replace: true });
   };
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-slate-50 px-6 py-10 text-slate-800">
       <section className="w-full max-w-xl rounded-lg bg-white p-8 shadow-md">
-        <h1 className="text-2xl font-bold">まずは出産予定日を登録しましょう</h1>
+        <h1 className="font-bold text-2xl">まずは出産予定日を登録しましょう</h1>
         <div className="mt-4 space-y-3">
-          {paragraphs.map((paragraph) => (
+          {descriptionParagraphs.map((paragraph) => (
             <p className="leading-relaxed" key={paragraph}>
               {paragraph}
             </p>
@@ -68,7 +52,7 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold" htmlFor="due-date">
+            <label className="font-semibold text-sm" htmlFor="due-date">
               出産予定日
             </label>
             <input
@@ -81,22 +65,17 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
               type="date"
               value={dueDate}
             />
-            <p className="text-xs text-slate-500">
+            <p className="text-slate-500 text-xs">
               ※ 保存した情報はご利用のブラウザにのみ保存されます。
             </p>
           </div>
           {errorMessage ? (
-            <p className="text-sm font-semibold text-rose-600" role="alert">
+            <p className="font-semibold text-rose-600 text-sm" role="alert">
               {errorMessage}
             </p>
           ) : null}
-          {isSaved && !onConfigured ? (
-            <p className="text-sm text-emerald-600" role="status">
-              保存が完了しました。メインページの準備が整うまで少々お待ちください。
-            </p>
-          ) : null}
           <button
-            className="w-full rounded-md bg-indigo-600 px-4 py-3 text-base font-semibold text-white transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="w-full rounded-md bg-indigo-600 px-4 py-3 font-semibold text-base text-white transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
             type="submit"
           >
             保存して始める
