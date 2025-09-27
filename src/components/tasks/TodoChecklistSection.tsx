@@ -1,10 +1,5 @@
 import type { KeyboardEvent } from "react";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -71,10 +66,7 @@ export const useTodoChecklist = ({
     setCompletedIds(state.completedTodos);
   }, [state.completedTodos]);
 
-  const completedIdSet = useMemo(
-    () => new Set(completedIds),
-    [completedIds]
-  );
+  const completedIdSet = useMemo(() => new Set(completedIds), [completedIds]);
 
   const sortedTodos = useMemo(() => {
     if (todos.length === 0) {
@@ -94,8 +86,7 @@ export const useTodoChecklist = ({
   }, [todos]);
 
   const pendingTodos = useMemo(
-    () =>
-      sortedTodos.filter((todo) => !completedIdSet.has(String(todo.id))),
+    () => sortedTodos.filter((todo) => !completedIdSet.has(String(todo.id))),
     [completedIdSet, sortedTodos]
   );
   const pendingCount = pendingTodos.length;
@@ -198,7 +189,10 @@ export const useTodoChecklist = ({
   };
 };
 
-type BadgeMap = Record<number, { accent: string; label: string; support: string }>;
+type BadgeMap = Record<
+  number,
+  { accent: string; label: string; support: string }
+>;
 
 type TodoChecklistSectionProps = {
   badgeMap?: BadgeMap;
@@ -229,23 +223,16 @@ const TodoChecklistSection = ({
     loadError,
   } = checklist;
   const priorityBadges = badgeMap ?? defaultPriorityTypeBadges;
-  const fallbackBadge =
-    priorityBadges[2] ??
+  const fallbackBadge = priorityBadges[2] ??
     priorityBadges[1] ?? {
       accent: "bg-slate-200 text-slate-700",
       label: "タスク",
       support: "サポート内容を確認しましょう。",
     };
   const idPrefix = sectionId ? `${sectionId}-todo` : "todo";
-  const headerDescription =
-    description ??
-    "パパのTODO";
-  const headerTitle =
-    title ??
-    "今やるべきことを整理しましょう";
-  const resolvedEmptyMessage =
-    emptyMessage ??
-    "表示できるTODOがありません。";
+  const headerDescription = description ?? "パパのTODO";
+  const headerTitle = title ?? "今やるべきことを整理しましょう";
+  const resolvedEmptyMessage = emptyMessage ?? "表示できるTODOがありません。";
   const resolvedShowMoreLabel = showMoreLabel ?? "さらに表示";
 
   return (
@@ -275,7 +262,8 @@ const TodoChecklistSection = ({
             <ul className="space-y-4">
               {displayTodos.map((todo) => {
                 const id = `${idPrefix}-${todo.id}`;
-                const badge = priorityBadges[todo.priorityType] ?? fallbackBadge;
+                const badge =
+                  priorityBadges[todo.priorityType] ?? fallbackBadge;
                 const isChecked = completedIdSet.has(String(todo.id));
 
                 return (
