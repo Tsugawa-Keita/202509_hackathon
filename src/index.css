@@ -10,18 +10,18 @@
 
   color-scheme: light dark;
   color: #1e1a16;
-  background-color: #fff2d4;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --radius: 0.625rem;
-  --background: #fff2d4;
+  --background: #ffffff;
   --foreground: #1e1a16;
-  --card: #fff7e7;
+  --card: #ffffff;
   --card-foreground: #1e1a16;
-  --popover: #fff7e7;
+  --popover: #ffffff;
   --popover-foreground: #1e1a16;
   --primary: #72bfb3;
   --primary-foreground: #0f221e;
