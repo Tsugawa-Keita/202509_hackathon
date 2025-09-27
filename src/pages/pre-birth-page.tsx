@@ -2,17 +2,9 @@ import type { KeyboardEvent, MouseEvent, PointerEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSyncTasks } from "@/api/tasks";
-import TodoChecklistSection, {
-  useTodoChecklist,
-} from "@/components/tasks/todo-checklist-section";
+import TodoChecklistSection, { useTodoChecklist } from "@/components/tasks/todo-checklist-section";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -23,11 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { clampDays, createDisplayDate } from "../constants/common";
-import {
-  getMotherSummaryByWeeks,
-  MILLISECONDS_PER_PREGNANCY_DAY,
-  PREGNANCY_LIMITS,
-} from "../constants/pre-birth";
+import { getMotherSummaryByWeeks, MILLISECONDS_PER_PREGNANCY_DAY, PREGNANCY_LIMITS } from "../constants/pre-birth";
 import type { AppState } from "../lib/app-state";
 import { saveAppState } from "../lib/app-state";
 
@@ -40,17 +28,11 @@ const DAYS_PER_WEEK = 7;
 const LONG_PRESS_DURATION_MS = 800;
 
 const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
-  const {
-    data: tasks,
-    error: tasksError,
-    isLoading: isTasksLoading,
-  } = useSyncTasks();
+  const { data: tasks, error: tasksError, isLoading: isTasksLoading } = useSyncTasks();
 
   const todoChecklist = useTodoChecklist({
     isLoading: Boolean(isTasksLoading),
-    loadError: tasksError
-      ? "TODOリストの読み込みに失敗しました。時間をおいて再度お試しください。"
-      : "",
+    loadError: tasksError ? "TODOリストの読み込みに失敗しました。時間をおいて再度お試しください。" : "",
     onStateChange,
     state,
     todos: tasks ?? [],
@@ -150,15 +132,12 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
       return 0;
     }
 
-    const diff = Math.ceil(
-      (dueTime - Date.now()) / MILLISECONDS_PER_PREGNANCY_DAY
-    );
+    const diff = Math.ceil((dueTime - Date.now()) / MILLISECONDS_PER_PREGNANCY_DAY);
     return clampDays(diff);
   }, [state.dueDate]);
 
   const weeksPregnant = useMemo(() => {
-    const estimatedWeeks =
-      PREGNANCY_LIMITS.maxWeeks - Math.ceil(daysUntilDue / DAYS_PER_WEEK);
+    const estimatedWeeks = PREGNANCY_LIMITS.maxWeeks - Math.ceil(daysUntilDue / DAYS_PER_WEEK);
     if (estimatedWeeks < 0) {
       return 0;
     }
@@ -170,14 +149,8 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
     return estimatedWeeks;
   }, [daysUntilDue]);
 
-  const motherSummary = useMemo(
-    () => getMotherSummaryByWeeks(weeksPregnant),
-    [weeksPregnant]
-  );
-  const dueDateDisplay = useMemo(
-    () => createDisplayDate(state.dueDate),
-    [state.dueDate]
-  );
+  const motherSummary = useMemo(() => getMotherSummaryByWeeks(weeksPregnant), [weeksPregnant]);
+  const dueDateDisplay = useMemo(() => createDisplayDate(state.dueDate), [state.dueDate]);
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-slate-100 px-6 py-12 text-slate-900">
@@ -187,18 +160,12 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
             <CardDescription className="text-indigo-500 uppercase tracking-widest">
               出産準備の今を把握しましょう
             </CardDescription>
-            <CardTitle className="mt-2 font-bold text-3xl lg:text-4xl">
-              出産予定日まであと{daysUntilDue}日
-            </CardTitle>
-            <p className="mt-2 text-base text-slate-600">
-              予定日: {dueDateDisplay}
-            </p>
+            <CardTitle className="mt-2 font-bold text-3xl lg:text-4xl">出産予定日まであと{daysUntilDue}日</CardTitle>
+            <p className="mt-2 text-base text-slate-600">予定日: {dueDateDisplay}</p>
           </div>
           <Card className="w-full max-w-xs border-none bg-indigo-50 px-5 py-4 text-indigo-900 shadow-none lg:w-auto">
             <CardHeader className="gap-1 p-0">
-              <CardDescription className="font-semibold text-indigo-500/80 text-xs">
-                現在の進捗
-              </CardDescription>
+              <CardDescription className="font-semibold text-indigo-500/80 text-xs">現在の進捗</CardDescription>
               <CardTitle className="font-bold text-2xl text-indigo-900">
                 {todoChecklist.completedCount} / {todoChecklist.totalCount} 件
               </CardTitle>
@@ -208,10 +175,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
                 <span>達成率</span>
                 <span>{todoChecklist.progressPercentage}%</span>
               </div>
-              <Progress
-                className="mt-2 h-3"
-                value={todoChecklist.progressPercentage}
-              />
+              <Progress className="mt-2 h-3" value={todoChecklist.progressPercentage} />
             </CardContent>
           </Card>
         </CardHeader>
@@ -240,9 +204,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
             />
           </button>
           <div className="flex-1 space-y-3">
-            <h2 className="font-semibold text-2xl">
-              赤ちゃんが生まれたら、赤ちゃんアイコンを長押し
-            </h2>
+            <h2 className="font-semibold text-2xl">赤ちゃんが生まれたら、赤ちゃんアイコンを長押し</h2>
             <p className="text-base text-slate-600 leading-relaxed">
               生まれた瞬間をアプリに記録する準備をしておきましょう。赤ちゃんが誕生したら、このアイコンを長押しすることで出産後モードへ切り替える可能です。
             </p>
@@ -252,49 +214,33 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
 
       <Card className="mt-10 w-full max-w-4xl border-none bg-white shadow-md">
         <CardHeader>
-          <CardDescription className="text-indigo-500">
-            ママの状態
-          </CardDescription>
-          <CardTitle className="font-bold text-2xl">
-            {motherSummary.title}
-          </CardTitle>
+          <CardDescription className="text-indigo-500">ママの状態</CardDescription>
+          <CardTitle className="font-bold text-2xl">{motherSummary.title}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="mt-4 grid gap-6 lg:grid-cols-3">
             <Card className="border-none bg-slate-50 p-5 shadow-none">
               <CardHeader className="p-0">
-                <CardTitle className="font-semibold text-base text-slate-700">
-                  身体の変化
-                </CardTitle>
+                <CardTitle className="font-semibold text-base text-slate-700">身体の変化</CardTitle>
               </CardHeader>
               <CardContent className="px-0">
-                <p className="mt-2 text-slate-600 text-sm leading-relaxed">
-                  {motherSummary.body}
-                </p>
+                <p className="mt-2 text-slate-600 text-sm leading-relaxed">{motherSummary.body}</p>
               </CardContent>
             </Card>
             <Card className="border-none bg-slate-50 p-5 shadow-none">
               <CardHeader className="p-0">
-                <CardTitle className="font-semibold text-base text-slate-700">
-                  気持ちのゆらぎ
-                </CardTitle>
+                <CardTitle className="font-semibold text-base text-slate-700">気持ちのゆらぎ</CardTitle>
               </CardHeader>
               <CardContent className="px-0">
-                <p className="mt-2 text-slate-600 text-sm leading-relaxed">
-                  {motherSummary.mind}
-                </p>
+                <p className="mt-2 text-slate-600 text-sm leading-relaxed">{motherSummary.mind}</p>
               </CardContent>
             </Card>
             <Card className="border-none bg-slate-50 p-5 shadow-none">
               <CardHeader className="p-0">
-                <CardTitle className="font-semibold text-base text-slate-700">
-                  パパのサポート
-                </CardTitle>
+                <CardTitle className="font-semibold text-base text-slate-700">パパのサポート</CardTitle>
               </CardHeader>
               <CardContent className="px-0">
-                <p className="mt-2 text-slate-600 text-sm leading-relaxed">
-                  {motherSummary.support}
-                </p>
+                <p className="mt-2 text-slate-600 text-sm leading-relaxed">{motherSummary.support}</p>
               </CardContent>
             </Card>
           </div>
@@ -307,16 +253,10 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>出産後モードに切り替えますか？</DialogTitle>
-            <DialogDescription>
-              赤ちゃんが生まれたことを記録し、出産後のガイドに移動します。
-            </DialogDescription>
+            <DialogDescription>赤ちゃんが生まれたことを記録し、出産後のガイドに移動します。</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button
-              onClick={() => setConfirmOpen(false)}
-              type="button"
-              variant="outline"
-            >
+            <Button onClick={() => setConfirmOpen(false)} type="button" variant="outline">
               いいえ
             </Button>
             <Button onClick={handleConfirmTransition} type="button">

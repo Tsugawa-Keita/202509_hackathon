@@ -20,28 +20,19 @@ function Dialog({ ...props }: ComponentProps<typeof DialogPrimitiveRoot>) {
   return <DialogPrimitiveRoot data-slot="dialog" {...props} />;
 }
 
-function DialogTrigger({
-  ...props
-}: ComponentProps<typeof DialogPrimitiveTrigger>) {
+function DialogTrigger({ ...props }: ComponentProps<typeof DialogPrimitiveTrigger>) {
   return <DialogPrimitiveTrigger data-slot="dialog-trigger" {...props} />;
 }
 
-function DialogPortal({
-  ...props
-}: ComponentProps<typeof DialogPrimitivePortal>) {
+function DialogPortal({ ...props }: ComponentProps<typeof DialogPrimitivePortal>) {
   return <DialogPrimitivePortal data-slot="dialog-portal" {...props} />;
 }
 
-function DialogClose({
-  ...props
-}: ComponentProps<typeof DialogPrimitiveClose>) {
+function DialogClose({ ...props }: ComponentProps<typeof DialogPrimitiveClose>) {
   return <DialogPrimitiveClose data-slot="dialog-close" {...props} />;
 }
 
-function DialogOverlay({
-  className,
-  ...props
-}: ComponentProps<typeof DialogPrimitiveOverlay>) {
+function DialogOverlay({ className, ...props }: ComponentProps<typeof DialogPrimitiveOverlay>) {
   return (
     <DialogPrimitiveOverlay
       className={cn(
@@ -101,20 +92,14 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn(
-        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
-        className
-      )}
+      className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
       data-slot="dialog-footer"
       {...props}
     />
   );
 }
 
-function DialogTitle({
-  className,
-  ...props
-}: ComponentProps<typeof DialogPrimitiveTitle>) {
+function DialogTitle({ className, ...props }: ComponentProps<typeof DialogPrimitiveTitle>) {
   return (
     <DialogPrimitiveTitle
       className={cn("font-semibold text-lg leading-none", className)}
@@ -124,10 +109,7 @@ function DialogTitle({
   );
 }
 
-function DialogDescription({
-  className,
-  ...props
-}: ComponentProps<typeof DialogPrimitiveDescription>) {
+function DialogDescription({ className, ...props }: ComponentProps<typeof DialogPrimitiveDescription>) {
   return (
     <DialogPrimitiveDescription
       className={cn("text-muted-foreground text-sm", className)}

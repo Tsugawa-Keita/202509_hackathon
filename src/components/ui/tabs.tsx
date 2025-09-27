@@ -9,23 +9,11 @@ import {
 
 import { cn } from "@/lib/utils";
 
-function Tabs({
-  className,
-  ...props
-}: ComponentProps<typeof TabsPrimitiveRoot>) {
-  return (
-    <TabsPrimitiveRoot
-      className={cn("flex flex-col gap-2", className)}
-      data-slot="tabs"
-      {...props}
-    />
-  );
+function Tabs({ className, ...props }: ComponentProps<typeof TabsPrimitiveRoot>) {
+  return <TabsPrimitiveRoot className={cn("flex flex-col gap-2", className)} data-slot="tabs" {...props} />;
 }
 
-function TabsList({
-  className,
-  ...props
-}: ComponentProps<typeof TabsPrimitiveList>) {
+function TabsList({ className, ...props }: ComponentProps<typeof TabsPrimitiveList>) {
   return (
     <TabsPrimitiveList
       className={cn(
@@ -38,10 +26,7 @@ function TabsList({
   );
 }
 
-function TabsTrigger({
-  className,
-  ...props
-}: ComponentProps<typeof TabsPrimitiveTrigger>) {
+function TabsTrigger({ className, ...props }: ComponentProps<typeof TabsPrimitiveTrigger>) {
   return (
     <TabsPrimitiveTrigger
       className={cn(
@@ -54,17 +39,8 @@ function TabsTrigger({
   );
 }
 
-function TabsContent({
-  className,
-  ...props
-}: ComponentProps<typeof TabsPrimitiveContent>) {
-  return (
-    <TabsPrimitiveContent
-      className={cn("flex-1 outline-none", className)}
-      data-slot="tabs-content"
-      {...props}
-    />
-  );
+function TabsContent({ className, ...props }: ComponentProps<typeof TabsPrimitiveContent>) {
+  return <TabsPrimitiveContent className={cn("flex-1 outline-none", className)} data-slot="tabs-content" {...props} />;
 }
 
 export { Tabs, TabsList, TabsTrigger, TabsContent };

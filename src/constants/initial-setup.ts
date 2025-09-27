@@ -13,5 +13,4 @@ export const ERROR_MESSAGES = {
 } as const;
 
 // 可変の範囲エラー文言を生成（最小日は実行時に当日へ更新するため）
-export const buildRangeError = (minIso: string, maxIso: string) =>
-  `${minIso} から ${maxIso} の間で入力してください。`;
+export const buildRangeError = (minIso: string, maxIso: string) => `${minIso} から ${maxIso} の間で入力してください。`;

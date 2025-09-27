@@ -1,24 +1,13 @@
 import { format, isValid, parseISO } from "date-fns";
-import {
-  type ChangeEvent,
-  type FormEvent,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { type ChangeEvent, type FormEvent, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  buildRangeError,
-  DATE_LIMITS,
-  ERROR_MESSAGES,
-} from "../constants/initial-setup";
+import { buildRangeError, DATE_LIMITS, ERROR_MESSAGES } from "../constants/initial-setup";
 import type { AppState } from "../lib/app-state";
 import { createInitialState, saveAppState } from "../lib/app-state";
 
@@ -169,10 +158,7 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
             >
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label
-                    className="block font-medium text-muted-foreground text-sm"
-                    htmlFor="due-date"
-                  >
+                  <Label className="block font-medium text-muted-foreground text-sm" htmlFor="due-date">
                     出産予定日
                   </Label>
                   <Input
@@ -189,11 +175,7 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                 {/* デスクトップのみカスタムカレンダーをポップアップで表示 */}
                 {!isCoarsePointer && (
                   <div className="relative">
-                    <Button
-                      onClick={() => setCalendarOpen((v) => !v)}
-                      type="button"
-                      variant="outline"
-                    >
+                    <Button onClick={() => setCalendarOpen((v) => !v)} type="button" variant="outline">
                       カレンダーを開く
                     </Button>
                     {isCalendarOpen && (
@@ -205,36 +187,21 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                             before: minDateObj,
                             after: MAX_DATE_VALUE,
                           }}
-                          endMonth={
-                            new Date(
-                              MAX_DATE_VALUE.getFullYear(),
-                              MONTH_INDEX_DECEMBER
-                            )
-                          }
+                          endMonth={new Date(MAX_DATE_VALUE.getFullYear(), MONTH_INDEX_DECEMBER)}
                           mode="single"
                           onSelect={(d) => {
                             handleCalendarSelect(d);
                             setCalendarOpen(false);
                           }}
                           selected={selectedDate}
-                          startMonth={
-                            new Date(
-                              minDateObj.getFullYear(),
-                              minDateObj.getMonth(),
-                              1
-                            )
-                          }
+                          startMonth={new Date(minDateObj.getFullYear(), minDateObj.getMonth(), 1)}
                         />
                       </div>
                     )}
                   </div>
                 )}
                 {errorMessage ? (
-                  <p
-                    className="font-semibold text-destructive text-sm"
-                    id="due-date-error"
-                    role="alert"
-                  >
+                  <p className="font-semibold text-destructive text-sm" id="due-date-error" role="alert">
                     {errorMessage}
                   </p>
                 ) : null}

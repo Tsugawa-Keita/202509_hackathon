@@ -12,10 +12,7 @@ function Progress({ className, value, ...props }: ProgressProps) {
 
   return (
     <Root
-      className={cn(
-        "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
-        className
-      )}
+      className={cn("relative h-2 w-full overflow-hidden rounded-full bg-primary/20", className)}
       data-slot="progress"
       {...props}
     >

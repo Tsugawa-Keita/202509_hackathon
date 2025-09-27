@@ -2,19 +2,10 @@ import type { KeyboardEvent } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import {
-  priorityTypeBadges as defaultPriorityTypeBadges,
-  TODO_DISPLAY_STEP,
-} from "@/constants/pre-birth";
+import { priorityTypeBadges as defaultPriorityTypeBadges, TODO_DISPLAY_STEP } from "@/constants/pre-birth";
 import type { AppState } from "@/lib/app-state";
 import { saveAppState } from "@/lib/app-state";
 
@@ -57,9 +48,7 @@ export const useTodoChecklist = ({
   todos: sourceTodos,
 }: UseTodoChecklistArgs): TodoChecklistState => {
   const [visibleCount, setVisibleCount] = useState(TODO_DISPLAY_STEP);
-  const [completedIds, setCompletedIds] = useState<string[]>(
-    state.completedTodos
-  );
+  const [completedIds, setCompletedIds] = useState<string[]>(state.completedTodos);
 
   const todos = sourceTodos ?? [];
 
@@ -118,16 +107,11 @@ export const useTodoChecklist = ({
       return 0;
     }
 
-    return sortedTodos.reduce(
-      (total, todo) =>
-        completedIdSet.has(String(todo.id)) ? total + 1 : total,
-      0
-    );
+    return sortedTodos.reduce((total, todo) => (completedIdSet.has(String(todo.id)) ? total + 1 : total), 0);
   }, [completedIdSet, sortedTodos]);
 
   const completedTodos = useMemo(
-    () =>
-      sortedTodos.filter((todo) => completedIdSet.has(String(todo.id))),
+    () => sortedTodos.filter((todo) => completedIdSet.has(String(todo.id))),
     [completedIdSet, sortedTodos]
   );
 
@@ -152,9 +136,7 @@ export const useTodoChecklist = ({
       const sourceId = String(todoId);
       setCompletedIds((prev) => {
         const hasId = prev.includes(sourceId);
-        const nextCompleted = hasId
-          ? prev.filter((value) => value !== sourceId)
-          : prev.concat(sourceId);
+        const nextCompleted = hasId ? prev.filter((value) => value !== sourceId) : prev.concat(sourceId);
 
         const nextState: AppState = {
           ...state,
@@ -200,10 +182,7 @@ export const useTodoChecklist = ({
   };
 };
 
-type BadgeMap = Record<
-  number,
-  { accent: string; label: string; support: string }
->;
+type BadgeMap = Record<number, { accent: string; label: string; support: string }>;
 
 type TodoChecklistSectionProps = {
   badgeMap?: BadgeMap;
@@ -251,15 +230,10 @@ const TodoChecklistSection = ({
   const completedListId = `${idPrefix}-completed-list`;
 
   return (
-    <Card
-      className="mt-10 w-full max-w-4xl border-none bg-white shadow-md"
-      id={sectionId}
-    >
+    <Card className="mt-10 w-full max-w-4xl border-none bg-white shadow-md" id={sectionId}>
       <CardHeader className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <CardDescription className="text-indigo-500">
-            {headerDescription}
-          </CardDescription>
+          <CardDescription className="text-indigo-500">{headerDescription}</CardDescription>
           <CardTitle className="font-bold text-2xl">{headerTitle}</CardTitle>
         </div>
         {loadError ? (
@@ -277,8 +251,7 @@ const TodoChecklistSection = ({
             <ul className="space-y-4">
               {displayTodos.map((todo) => {
                 const id = `${idPrefix}-${todo.id}`;
-                const badge =
-                  priorityBadges[todo.priorityType] ?? fallbackBadge;
+                const badge = priorityBadges[todo.priorityType] ?? fallbackBadge;
                 const isChecked = completedIdSet.has(String(todo.id));
 
                 return (
@@ -293,16 +266,10 @@ const TodoChecklistSection = ({
                             onCheckedChange={() => handleToggleTodo(todo.id)}
                           />
                           <div>
-                            <Label
-                              className="font-semibold text-base text-slate-800"
-                              htmlFor={id}
-                              id={`${id}-label`}
-                            >
+                            <Label className="font-semibold text-base text-slate-800" htmlFor={id} id={`${id}-label`}>
                               {todo.text}
                             </Label>
-                            <p className="mt-2 text-slate-500 text-sm">
-                              {badge.support}
-                            </p>
+                            <p className="mt-2 text-slate-500 text-sm">{badge.support}</p>
                           </div>
                         </div>
                         <Badge className={badge.accent}>{badge.label}</Badge>
@@ -312,11 +279,7 @@ const TodoChecklistSection = ({
                 );
               })}
             </ul>
-            {displayTodos.length === 0 ? (
-              <p className="mt-6 text-slate-500 text-sm">
-                {resolvedEmptyMessage}
-              </p>
-            ) : null}
+            {displayTodos.length === 0 ? <p className="mt-6 text-slate-500 text-sm">{resolvedEmptyMessage}</p> : null}
             <div className="mt-8 flex justify-center">
               <Button
                 className="px-5 py-3 text-sm"
@@ -336,9 +299,7 @@ const TodoChecklistSection = ({
             {completedTodos.length > 0 ? (
               <section className="mt-10 border-t border-slate-200 pt-6">
                 <div className="flex items-center justify-between gap-3">
-                  <h3 className="font-semibold text-slate-700 text-sm">
-                    完了したタスク（{completedCount}件）
-                  </h3>
+                  <h3 className="font-semibold text-slate-700 text-sm">完了したタスク（{completedCount}件）</h3>
                   <Button
                     aria-controls={completedListId}
                     aria-expanded={isCompletedOpen}
@@ -351,14 +312,10 @@ const TodoChecklistSection = ({
                   </Button>
                 </div>
                 {isCompletedOpen ? (
-                  <ul
-                    className="mt-4 space-y-3"
-                    id={completedListId}
-                  >
+                  <ul className="mt-4 space-y-3" id={completedListId}>
                     {completedTodos.map((todo) => {
                       const id = `${idPrefix}-completed-${todo.id}`;
-                      const badge =
-                        priorityBadges[todo.priorityType] ?? fallbackBadge;
+                      const badge = priorityBadges[todo.priorityType] ?? fallbackBadge;
 
                       return (
                         <li key={todo.id}>
@@ -379,14 +336,10 @@ const TodoChecklistSection = ({
                                   >
                                     {todo.text}
                                   </Label>
-                                  <p className="mt-2 text-slate-400 text-sm">
-                                    {badge.support}
-                                  </p>
+                                  <p className="mt-2 text-slate-400 text-sm">{badge.support}</p>
                                 </div>
                               </div>
-                              <Badge className={`${badge.accent} opacity-70`}>
-                                {badge.label}
-                              </Badge>
+                              <Badge className={`${badge.accent} opacity-70`}>{badge.label}</Badge>
                             </div>
                           </Card>
                         </li>

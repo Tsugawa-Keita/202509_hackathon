@@ -16,22 +16,16 @@ export const SECTION_TITLES = {
 } as const;
 
 export const SECTION_DESCRIPTIONS = {
-  importantTask:
-    "最も優先度の高いタスクです。完了していない場合は、まずここから対応しましょう。",
-  schedule:
-    "赤ちゃんとママのリズムを整えるためのモデルケースです。時間に縛られすぎず、目安として活用してください。",
-  tasks:
-    "優先度順に並んでいます。完了した項目はチェックを入れて記録しましょう。",
+  importantTask: "最も優先度の高いタスクです。完了していない場合は、まずここから対応しましょう。",
+  schedule: "赤ちゃんとママのリズムを整えるためのモデルケースです。時間に縛られすぎず、目安として活用してください。",
+  tasks: "優先度順に並んでいます。完了した項目はチェックを入れて記録しましょう。",
 } as const;
 
 export const ANCHOR_IDS = {
   tasks: "administrative-tasks",
 } as const;
 
-export const POST_BIRTH_PRIORITY_BADGES: Record<
-  number,
-  { accent: string; label: string; support: string }
-> = {
+export const POST_BIRTH_PRIORITY_BADGES: Record<number, { accent: string; label: string; support: string }> = {
   1: {
     accent: "bg-rose-100 text-rose-700",
     label: "事務手続き",

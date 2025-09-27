@@ -19,12 +19,7 @@ const App = () => {
         <Route
           element={
             state ? (
-              <Navigate
-                replace
-                to={
-                  state.appState === "post-birth" ? "/post-birth" : "/pre-birth"
-                }
-              />
+              <Navigate replace to={state.appState === "post-birth" ? "/post-birth" : "/pre-birth"} />
             ) : (
               <Navigate replace to="/setup" />
             )
@@ -32,44 +27,23 @@ const App = () => {
           index
         />
         <Route
-          element={
-            state ? (
-              <Navigate replace to="/" />
-            ) : (
-              <InitialSetupPage onConfigured={handleStateReplace} />
-            )
-          }
+          element={state ? <Navigate replace to="/" /> : <InitialSetupPage onConfigured={handleStateReplace} />}
           path="/setup"
         />
         <Route
           element={
-            state ? (
-              <PreBirthPage onStateChange={handleStateReplace} state={state} />
-            ) : (
-              <Navigate replace to="/setup" />
-            )
+            state ? <PreBirthPage onStateChange={handleStateReplace} state={state} /> : <Navigate replace to="/setup" />
           }
           path="/pre-birth"
         />
         <Route
-          element={
-            state ? (
-              <PostBirthPage state={state} />
-            ) : (
-              <Navigate replace to="/setup" />
-            )
-          }
+          element={state ? <PostBirthPage state={state} /> : <Navigate replace to="/setup" />}
           path="/post-birth"
         />
         <Route
           element={
             state ? (
-              <Navigate
-                replace
-                to={
-                  state.appState === "post-birth" ? "/post-birth" : "/pre-birth"
-                }
-              />
+              <Navigate replace to={state.appState === "post-birth" ? "/post-birth" : "/pre-birth"} />
             ) : (
               <Navigate replace to="/setup" />
             )

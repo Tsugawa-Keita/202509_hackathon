@@ -32,10 +32,6 @@ export const clampDays = (value: number) => {
   return value;
 };
 
-export const MILLISECONDS_PER_DAY =
-  HOURS_PER_DAY *
-  MINUTES_PER_HOUR *
-  SECONDS_PER_MINUTE *
-  MILLISECONDS_PER_SECOND;
+export const MILLISECONDS_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND;
 
 export { MAX_CLAMP_DAYS };

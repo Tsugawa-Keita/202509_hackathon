@@ -1,10 +1,7 @@
 import useSwr from "swr";
 
 import type { TodoItem } from "@/components/tasks/todo-checklist-section";
-import {
-  POST_BIRTH_SCHEDULE,
-  POST_BIRTH_TODOS,
-} from "@/constants/post-birth-data";
+import { POST_BIRTH_SCHEDULE, POST_BIRTH_TODOS } from "@/constants/post-birth-data";
 import { fetcher } from "@/lib/fetcher";
 
 type ScheduleItem = {
@@ -13,9 +10,9 @@ type ScheduleItem = {
   time: string;
 };
 
-const API_PATH = '/tasks'
+const API_PATH = "/tasks";
 
-const endpoint = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}${API_PATH}`;
+const endpoint = `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"}${API_PATH}`;
 
 const isValidTodoItem = (value: unknown): value is TodoItem => {
   if (!value || typeof value !== "object") {
@@ -51,11 +48,9 @@ const STATIC_TODO_FALLBACK: TodoItem[] = POST_BIRTH_TODOS.map((item) => ({
   ...item,
 }));
 
-const STATIC_SCHEDULE_FALLBACK: ScheduleItem[] = POST_BIRTH_SCHEDULE.map(
-  (item) => ({
-    ...item,
-  })
-);
+const STATIC_SCHEDULE_FALLBACK: ScheduleItem[] = POST_BIRTH_SCHEDULE.map((item) => ({
+  ...item,
+}));
 
 for (const todo of STATIC_TODO_FALLBACK) {
   Object.freeze(todo);
@@ -88,13 +83,9 @@ const fetchSchedule = async () => {
 };
 
 export function useSyncTasks(path = "pre_birth") {
-  return useSwr<TodoItem[]>(
-    `${endpoint}/${path}`,
-    () => fetchTodoList(path),
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  return useSwr<TodoItem[]>(`${endpoint}/${path}`, () => fetchTodoList(path), {
+    revalidateOnFocus: false,
+  });
 }
 
 export const usePostBirthTasks = () =>

@@ -15,10 +15,8 @@ const buttonVariants = cva(
           "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40",
         outline:
           "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
@@ -40,14 +38,7 @@ type ButtonProps = ComponentProps<"button"> &
     asChild?: boolean;
   };
 
-function Button({
-  asChild = false,
-  className,
-  size,
-  type,
-  variant,
-  ...rest
-}: ButtonProps) {
+function Button({ asChild = false, className, size, type, variant, ...rest }: ButtonProps) {
   const Comp = asChild ? Slot : "button";
   const mergedClassName = cn(buttonVariants({ variant, size }), className);
 
@@ -55,14 +46,7 @@ function Button({
     return <Comp data-slot="button" className={mergedClassName} {...rest} />;
   }
 
-  return (
-    <Comp
-      className={mergedClassName}
-      data-slot="button"
-      type={type ?? "button"}
-      {...rest}
-    />
-  );
+  return <Comp className={mergedClassName} data-slot="button" type={type ?? "button"} {...rest} />;
 }
 
 export { Button, buttonVariants };
