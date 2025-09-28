@@ -123,6 +123,8 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
     const nextState: AppState = {
       ...state,
       appState: "post-birth",
+      // ページ遷移時に完了タスクリストをクリア
+      completedTodos: [],
     };
 
     saveAppState(nextState);
