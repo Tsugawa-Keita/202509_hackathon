@@ -49,7 +49,7 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   const [dueDate, setDueDate] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [todayIso, setTodayIso] = useState(getTodayIso);
-  const [isCalendarOpen, setCalendarOpen] = useState(true);
+  const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [isCoarsePointer, setCoarsePointer] = useState(false);
 
   // 0時に最小日付を自動更新
@@ -206,7 +206,7 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                   </p>
                 ) : null}
               </div>
-              <Button className="h-11 text-base" type="submit">
+              <Button className="h-11 font-[MPLUSRounded1c-Medium] text-base text-white tracking-wider" type="submit">
                 保存して始める
               </Button>
             </form>

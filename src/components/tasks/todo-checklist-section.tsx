@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { priorityTypeBadges as defaultPriorityTypeBadges, TODO_DISPLAY_STEP } from "@/constants/pre-birth";
 import type { AppState } from "@/lib/app-state";
 import { saveAppState } from "@/lib/app-state";
+import { cn } from "@/lib/utils";
 
 export type TodoItem = {
   id: number;
@@ -216,9 +217,36 @@ const TodoChecklistSection = ({
     loadError,
   } = checklist;
 
-  useEffect(() => {
-   console.log(displayTodos) 
-  }, [displayTodos])
+  // チェック後にフェードアウトしてからリストから消すための一時状態
+  const [exitingIds, setExitingIds] = useState<Set<number>>(new Set());
+
+  // ペンディング側（未完了リスト）でチェックしたときのみ、
+  // いったんフェードアウトさせてから完了扱いにする
+  const handleToggleWithAnimation = useCallback(
+    (todoId: number) => {
+      const isCurrentlyCompleted = completedIdSet.has(String(todoId));
+      if (!isCurrentlyCompleted) {
+        setExitingIds((prev) => {
+          const next = new Set(prev);
+          next.add(todoId);
+          return next;
+        });
+        // アニメーション終了後に完了へ移動
+        window.setTimeout(() => {
+          handleToggleTodo(todoId);
+          setExitingIds((prev) => {
+            const next = new Set(prev);
+            next.delete(todoId);
+            return next;
+          });
+        }, 250); // duration-300 と概ね合わせる
+        return;
+      }
+      // すでに完了 → 未完了へ戻すケースは即時反映
+      handleToggleTodo(todoId);
+    },
+    [completedIdSet, handleToggleTodo]
+  );
 
   const priorityBadges = badgeMap ?? defaultPriorityTypeBadges;
   const fallbackBadge = priorityBadges[2] ??
@@ -259,17 +287,22 @@ const TodoChecklistSection = ({
                 const id = `${idPrefix}-${todo.id}`;
                 const badge = priorityBadges[todo.priorityType] ?? fallbackBadge;
                 const isChecked = completedIdSet.has(String(todo.id));
+                const isExiting = exitingIds.has(todo.id);
 
                 return (
-                  <li key={todo.id}>
+                  <li
+                    className={cn("transition-all duration-300 ease-out", isExiting && "translate-y-1 opacity-0")}
+                    key={todo.id}
+                  >
                     <Card className="border-slate-200 p-5 shadow-sm">
                       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div className="flex items-start gap-4">
                           <Checkbox
                             aria-labelledby={`${id}-label`}
                             checked={isChecked}
+                            disabled={isExiting}
                             id={id}
-                            onCheckedChange={() => handleToggleTodo(todo.id)}
+                            onCheckedChange={() => handleToggleWithAnimation(todo.id)}
                           />
                           <div>
                             <Label className="font-semibold text-base text-slate-800" htmlFor={id} id={`${id}-label`}>
@@ -312,7 +345,6 @@ const TodoChecklistSection = ({
                     className="px-3 py-2 text-xs"
                     onClick={() => setCompletedOpen((prev) => !prev)}
                     type="button"
-                    variant="secondary"
                   >
                     {isCompletedOpen ? "非表示" : "表示"}
                   </Button>
