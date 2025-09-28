@@ -49,7 +49,7 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   const [dueDate, setDueDate] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [todayIso, setTodayIso] = useState(getTodayIso);
-  const [isCalendarOpen, setCalendarOpen] = useState(false);
+  const [isCalendarOpen, setCalendarOpen] = useState(true);
   const [isCoarsePointer, setCoarsePointer] = useState(false);
 
   // 0時に最小日付を自動更新
@@ -169,38 +169,37 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                   />
                 </div>
                 {/* デスクトップのみカスタムカレンダーをポップアップで表示 */}
-                {!isCoarsePointer && (
-                  <div className="relative">
-                    <Button
-                      className="border-[#DDDCDC]"
-                      onClick={() => setCalendarOpen((v) => !v)}
-                      type="button"
-                      variant="outline"
-                    >
-                      カレンダーを開く
-                    </Button>
-                    {isCalendarOpen && (
-                      <div className="absolute z-50 mt-2 rounded-xl bg-muted p-4 shadow-sm">
-                        <Calendar
-                          buttonVariant="outline"
-                          captionLayout="dropdown"
-                          disabled={{
-                            before: minDateObj,
-                            after: MAX_DATE_VALUE,
-                          }}
-                          endMonth={new Date(MAX_DATE_VALUE.getFullYear(), MONTH_INDEX_DECEMBER)}
-                          mode="single"
-                          onSelect={(d) => {
-                            handleCalendarSelect(d);
-                            setCalendarOpen(false);
-                          }}
-                          selected={selectedDate}
-                          startMonth={new Date(minDateObj.getFullYear(), minDateObj.getMonth(), 1)}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
+                {/* {!isCoarsePointer && ( */}
+                <div className="relative">
+                  <Button
+                    className="border-[#DDDCDC]"
+                    onClick={() => setCalendarOpen((v) => !v)}
+                    type="button"
+                    variant="outline"
+                  >
+                    カレンダーを開く
+                  </Button>
+                  {isCalendarOpen && (
+                    <div className="absolute z-50 mt-2 rounded-xl bg-muted p-4 shadow-sm">
+                      <Calendar
+                        buttonVariant="outline"
+                        captionLayout="dropdown"
+                        disabled={{
+                          before: minDateObj,
+                          after: MAX_DATE_VALUE,
+                        }}
+                        endMonth={new Date(MAX_DATE_VALUE.getFullYear(), MONTH_INDEX_DECEMBER)}
+                        mode="single"
+                        onSelect={(d) => {
+                          handleCalendarSelect(d);
+                          setCalendarOpen(false);
+                        }}
+                        selected={selectedDate}
+                        startMonth={new Date(minDateObj.getFullYear(), minDateObj.getMonth(), 1)}
+                      />
+                    </div>
+                  )}
+                </div>
                 {errorMessage ? (
                   <p className="font-semibold text-destructive text-sm" id="due-date-error" role="alert">
                     {errorMessage}
