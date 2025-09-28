@@ -7,7 +7,7 @@ type DivProps = ComponentPropsWithoutRef<"div">;
 function Card({ className, ...props }: DivProps) {
   return (
     <div
-      className={cn("flex flex-col gap-6 rounded-xl border bg-card py-8 text-card-foreground shadow-sm", className)}
+      className={cn("flex flex-col gap-6 rounded-xl bg-card py-8 text-card-foreground shadow-sm", className)}
       data-slot="card"
       {...props}
     />
@@ -28,7 +28,13 @@ function CardHeader({ className, ...props }: DivProps) {
 }
 
 function CardTitle({ className, ...props }: DivProps) {
-  return <div className={cn("font-[MPLUSRounded1c-Bold] leading-none tracking-wider", className)} data-slot="card-title" {...props} />;
+  return (
+    <div
+      className={cn("font-[MPLUSRounded1c-Bold] leading-none tracking-wider", className)}
+      data-slot="card-title"
+      {...props}
+    />
+  );
 }
 
 function CardDescription({ className, ...props }: DivProps) {

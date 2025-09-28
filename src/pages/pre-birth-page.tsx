@@ -153,7 +153,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
   const dueDateDisplay = useMemo(() => createDisplayDate(state.dueDate), [state.dueDate]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-slate-100 px-6 py-12 text-slate-900">
+    <main className="flex min-h-screen flex-col items-center bg-[#C5E4CA] px-6 py-12 text-slate-900">
       <Card className="w-full max-w-4xl border-none bg-white shadow-md">
         <CardHeader className="gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>

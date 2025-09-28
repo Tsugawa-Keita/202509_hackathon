@@ -293,7 +293,7 @@ const PostBirthPage = ({ state }: PostBirthPageProps) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <main className="flex min-h-screen flex-col items-center bg-slate-100 px-6 py-12 text-slate-900" id="top">
+      <main className="flex min-h-screen flex-col items-center bg-[#FFF2D4] px-6 py-12 text-slate-900" id="top">
         <Card className="w-full max-w-4xl border-none bg-white shadow-md">
           <CardHeader className="gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>

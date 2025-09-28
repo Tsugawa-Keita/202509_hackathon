@@ -143,17 +143,14 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   };
 
   return (
-    <main className="flex items-center min-h-dvh bg-[#C5E4CA] py-12 px-6 text-foreground md:py-20">
+    <main className="flex min-h-dvh items-center bg-[#C5E4CA] px-6 py-12 text-foreground md:py-20">
       <div className="mx-auto w-full max-w-2xl px-4 sm:px-6">
-        <Card className="border border-border bg-background text-card-foreground shadow-xl">
+        <Card className="bg-background text-card-foreground shadow-xl">
           <CardHeader className="gap-2 pb-0">
-            <CardTitle className="text-center font-semibold text-xl">出産予定日を登録</CardTitle>
+            <CardTitle className="text-center font-semibold text-2xl">出産予定日を登録</CardTitle>
           </CardHeader>
           <CardContent className="">
-            <form
-              className="flex h-fit flex-col gap-6 rounded-2xl border border-border bg-background p-5 shadow-sm sm:p-7"
-              onSubmit={handleSubmit}
-            >
+            <form className="flex h-fit flex-col gap-6 rounded-2xl bg-background p-5 sm:p-7" onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label className="block font-bold text-muted-foreground text-sm tracking-wider" htmlFor="due-date">
@@ -161,6 +158,7 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                   </Label>
                   <Input
                     aria-describedby="due-date-guidance due-date-error"
+                    className="border-[#DDDCDC]"
                     id="due-date"
                     max={DATE_LIMITS.maxDate}
                     min={todayIso}
@@ -173,11 +171,16 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
                 {/* デスクトップのみカスタムカレンダーをポップアップで表示 */}
                 {!isCoarsePointer && (
                   <div className="relative">
-                    <Button onClick={() => setCalendarOpen((v) => !v)} type="button" variant="outline">
+                    <Button
+                      className="border-[#DDDCDC]"
+                      onClick={() => setCalendarOpen((v) => !v)}
+                      type="button"
+                      variant="outline"
+                    >
                       カレンダーを開く
                     </Button>
                     {isCalendarOpen && (
-                      <div className="absolute z-50 mt-2 rounded-xl border border-border bg-muted p-4">
+                      <div className="absolute z-50 mt-2 rounded-xl bg-muted p-4 shadow-sm">
                         <Calendar
                           buttonVariant="outline"
                           captionLayout="dropdown"
