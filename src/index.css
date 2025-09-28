@@ -5,20 +5,20 @@
 
 @font-face {
   font-family: "MPLUSRounded1c-Medium";
-  src: url("fonts/MPLUSRounded1c-Medium.eot");
+  src: url("./fonts/MPLUSRounded1c-Medium.eot");
   src:
-    url("fonts/MPLUSRounded1c-Medium.woff") format("woff"),
-    url("fonts/MPLUSRounded1c-Medium.woff2") format("woff2");
+    url("./fonts/MPLUSRounded1c-Medium.woff") format("woff"),
+    url("./fonts/MPLUSRounded1c-Medium.woff2") format("woff2");
   font-weight: 400; /* Medium */
   font-style: normal;
 }
 
 @font-face {
   font-family: "MPLUSRounded1c-Bold";
-  src: url("fonts/MPLUSRounded1c-Bold.eot");
+  src: url("./fonts/MPLUSRounded1c-Bold.eot");
   src:
-    url("fonts/MPLUSRounded1c-Bold.woff") format("woff"),
-    url("fonts/MPLUSRounded1c-Bold.woff2") format("woff2");
+    url("./fonts/MPLUSRounded1c-Bold.woff") format("woff"),
+    url("./fonts/MPLUSRounded1c-Bold.woff2") format("woff2");
   font-weight: bold;
   font-style: normal;
 }
