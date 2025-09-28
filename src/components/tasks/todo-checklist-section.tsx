@@ -9,11 +9,12 @@ import { priorityTypeBadges as defaultPriorityTypeBadges, TODO_DISPLAY_STEP } fr
 import type { AppState } from "@/lib/app-state";
 import { saveAppState } from "@/lib/app-state";
 
-type TodoItem = {
+export type TodoItem = {
   id: number;
   priority: number;
   priorityType: number;
   text: string;
+  task?: string;
 };
 
 type UseTodoChecklistArgs = {
@@ -214,6 +215,11 @@ const TodoChecklistSection = ({
     isShowMoreDisabled,
     loadError,
   } = checklist;
+
+  useEffect(() => {
+   console.log(displayTodos) 
+  }, [displayTodos])
+
   const priorityBadges = badgeMap ?? defaultPriorityTypeBadges;
   const fallbackBadge = priorityBadges[2] ??
     priorityBadges[1] ?? {
@@ -267,9 +273,9 @@ const TodoChecklistSection = ({
                           />
                           <div>
                             <Label className="font-semibold text-base text-slate-800" htmlFor={id} id={`${id}-label`}>
-                              {todo.text}
+                              {todo.task}
                             </Label>
-                            <p className="mt-2 text-slate-500 text-sm">{badge.support}</p>
+                            {/* <p className="mt-2 text-slate-500 text-sm">{badge.support}</p> */}
                           </div>
                         </div>
                         <Badge className={badge.accent}>{badge.label}</Badge>
@@ -358,4 +364,4 @@ const TodoChecklistSection = ({
 
 export default TodoChecklistSection;
 
-export type { TodoItem, TodoChecklistSectionProps, TodoChecklistState };
+export type { TodoChecklistSectionProps, TodoChecklistState };

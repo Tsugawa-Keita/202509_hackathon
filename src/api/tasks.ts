@@ -92,9 +92,7 @@ const fetchSchedule = async () => {
 };
 
 export function useSyncTasks(path = "pre_birth") {
-  return useSwr<TodoItem[]>(`${endpoint}/${path}`, () => fetchTodoList(path), {
-    revalidateOnFocus: false,
-  });
+  return useSwr<TodoItem[]>(`${endpoint}/${path}`, fetcher);
 }
 
 export const usePostBirthTasks = () =>
