@@ -143,15 +143,13 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   };
 
   return (
-    <main className="min-h-dvh bg-background py-12 text-foreground md:py-20">
-      <div className="mx-auto w-full max-w-2xl px-4 sm:px-6">
+    <main className="min-h-dvh bg-[#C5E4CA] py-12 text-foreground md:py-20">
+      <div className="mx-auto flex h-full w-full max-w-2xl justify-center px-4 align-middle sm:px-6">
         <Card className="border border-border bg-background text-card-foreground shadow-xl">
           <CardHeader className="gap-2 pb-0">
-            <CardTitle className="font-semibold text-xl md:text-[2.75rem]">
-              まずは出産予定日の登録をしましょう
-            </CardTitle>
+            <CardTitle className="text-center font-semibold text-xl">出産予定日を登録</CardTitle>
           </CardHeader>
-          <CardContent className="pt-6 pb-10">
+          <CardContent className="">
             <form
               className="flex h-fit flex-col gap-6 rounded-2xl border border-border bg-background p-5 shadow-sm sm:p-7"
               onSubmit={handleSubmit}

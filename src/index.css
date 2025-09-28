@@ -3,6 +3,26 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+  font-family: "MPLUSRounded1c-Medium";
+  src: url("fonts/MPLUSRounded1c-Medium.eot");
+  src:
+    url("fonts/MPLUSRounded1c-Medium.woff") format("woff"),
+    url("fonts/MPLUSRounded1c-Medium.woff2") format("woff2");
+  font-weight: 400; /* Medium */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "MPLUSRounded1c-Bold";
+  src: url("fonts/MPLUSRounded1c-Bold.eot");
+  src:
+    url("fonts/MPLUSRounded1c-Bold.woff") format("woff"),
+    url("fonts/MPLUSRounded1c-Bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -18,7 +38,8 @@
   -moz-osx-font-smoothing: grayscale;
   --radius: 0.625rem;
   --background: #ffffff;
-  --foreground: #1e1a16;
+  /* --foreground: #1e1a16; */
+  --foreground: #ffffff;
   --card: #ffffff;
   --card-foreground: #1e1a16;
   --popover: #ffffff;
