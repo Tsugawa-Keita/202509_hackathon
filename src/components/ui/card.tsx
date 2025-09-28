@@ -28,7 +28,7 @@ function CardHeader({ className, ...props }: DivProps) {
 }
 
 function CardTitle({ className, ...props }: DivProps) {
-  return <div className={cn("font-[MPLUSRounded1c-Bold] leading-none", className)} data-slot="card-title" {...props} />;
+  return <div className={cn("font-[MPLUSRounded1c-Bold] leading-none tracking-wider", className)} data-slot="card-title" {...props} />;
 }
 
 function CardDescription({ className, ...props }: DivProps) {
