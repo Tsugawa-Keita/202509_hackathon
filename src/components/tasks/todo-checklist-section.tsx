@@ -321,7 +321,7 @@ const TodoChecklistSection = ({
             {displayTodos.length === 0 ? <p className="mt-6 text-slate-500 text-sm">{resolvedEmptyMessage}</p> : null}
             <div className="mt-8 flex justify-center">
               <Button
-                className="px-5 py-3 text-sm"
+                className="px-5 py-3 font-[MPLUSRounded1c-Medium] text-sm text-white tracking-wider"
                 disabled={isShowMoreDisabled}
                 onClick={handleShowMore}
                 onKeyDown={(event: KeyboardEvent<HTMLButtonElement>) => {

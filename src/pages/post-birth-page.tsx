@@ -287,7 +287,11 @@ const PostBirthPage = ({ state }: PostBirthPageProps) => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button onClick={() => setCelebrationOpen(false)} type="button">
+            <Button
+              className="font-[MPLUSRounded1c-Medium] text-white tracking-wider"
+              onClick={() => setCelebrationOpen(false)}
+              type="button"
+            >
               閉じる
             </Button>
           </DialogFooter>

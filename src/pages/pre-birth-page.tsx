@@ -309,10 +309,18 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
             <DialogDescription>赤ちゃんが生まれたことを記録し、 出産後のガイドに移動します。</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button className="bg-white text-black shadow-sm" onClick={() => setConfirmOpen(false)} type="button">
+            <Button
+              className="bg-white font-[MPLUSRounded1c-Medium] text-black tracking-wider shadow-sm"
+              onClick={() => setConfirmOpen(false)}
+              type="button"
+            >
               いいえ
             </Button>
-            <Button onClick={handleConfirmTransition} type="button">
+            <Button
+              className="font-[MPLUSRounded1c-Medium] text-white tracking-wider"
+              onClick={handleConfirmTransition}
+              type="button"
+            >
               はい、切り替える
             </Button>
           </DialogFooter>
