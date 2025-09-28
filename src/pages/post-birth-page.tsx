@@ -106,8 +106,8 @@ const buildImportantTaskContent = ({ anchorId, importantTask, isChecklistReady }
       className="mt-4 flex flex-col gap-2 rounded-lg border border-rose-200 bg-rose-50 p-4 text-rose-800 transition hover:shadow focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-rose-200"
       href={`#${anchorId}`}
     >
-      <span className="font-semibold text-sm">{IMPORTANT_TASK_HEADING}</span>
-      <span className="font-bold text-lg">{importantTask.text}</span>
+      <span className="font-semibold text-slate-700 text-sm">{IMPORTANT_TASK_HEADING}</span>
+      <span className="font-bold text-lg text-slate-700">{importantTask.text}</span>
       <Badge className={priorityBadge.accent}>{priorityBadge.label}</Badge>
       <span className="text-rose-700/90 text-xs">{IMPORTANT_TASK_LINK_HINT}</span>
     </a>
@@ -129,12 +129,12 @@ const buildScheduleContent = ({ isScheduleReady, schedule }: ScheduleContentPara
   }
 
   return (
-    <ol className="relative border-indigo-100 border-l-2 pl-6">
+    <ol className="relative border-[#A4DDD3] border-l-2 pl-6">
       {schedule.map((item, index) => (
         <li className="mb-8 last:mb-0" key={item.id}>
-          <div className="-left-[11px] absolute mt-1 h-5 w-5 rounded-full border-2 border-white bg-indigo-500" />
+          <div className="-left-[11px] absolute mt-1 h-5 w-5 rounded-full border-2 border-white bg-[#A4DDD3]" />
           <div className="flex flex-col gap-1">
-            <span className="font-semibold text-indigo-500 text-sm">{item.time}</span>
+            <span className="font-semibold text-[#00caa5] text-sm">{item.time}</span>
             <span className="text-base text-slate-800">{item.text}</span>
           </div>
           {index === 0 ? <span className="sr-only">スケジュール開始</span> : null}
@@ -297,26 +297,28 @@ const PostBirthPage = ({ state }: PostBirthPageProps) => {
         <Card className="w-full max-w-4xl border-none bg-white shadow-md">
           <CardHeader className="gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <CardDescription className="text-indigo-500 uppercase tracking-widest">
-                {PAGE_CONTENT.title}
-              </CardDescription>
+              <CardDescription className="text-slate uppercase tracking-widest">{PAGE_CONTENT.title}</CardDescription>
               <CardTitle className="mt-2 font-bold text-3xl lg:text-4xl">
                 {PAGE_CONTENT.heroHighlight}
                 {daysAfterBirth}日
               </CardTitle>
-              <p className="mt-2 text-base text-slate-600">記録日: {dueDateDisplay}</p>
+              <p className="mt-2 text-base text-slate">記録日: {dueDateDisplay}</p>
             </div>
-            <Card className="w-full max-w-xs border-none bg-indigo-50 px-5 py-4 text-indigo-900 shadow-none lg:w-auto">
+            <Card className="w-full max-w-xs border-none bg-[#fdf6e6] px-5 py-4 shadow-none lg:w-auto">
               <CardHeader className="gap-1 p-0">
-                <CardDescription className="font-semibold text-indigo-500/80 text-xs">TODOの進捗</CardDescription>
-                <CardTitle className="font-bold text-2xl text-indigo-900">{progressLabel}</CardTitle>
+                <CardDescription className="font-semibold text-slate text-xs">TODOの進捗</CardDescription>
+                <CardTitle className="font-bold text-2xl text-slate">{progressLabel}</CardTitle>
               </CardHeader>
               <CardContent className="px-0">
                 <div className="flex items-center justify-between text-sm">
                   <span>達成率</span>
                   <span>{todoChecklist.progressPercentage}%</span>
                 </div>
-                <Progress aria-label="TODO達成率" className="mt-2 h-3" value={todoChecklist.progressPercentage} />
+                <Progress
+                  aria-label="TODO達成率"
+                  className="mt-2 h-3 bg-[#A4DDD3]"
+                  value={todoChecklist.progressPercentage}
+                />
               </CardContent>
             </Card>
           </CardHeader>
@@ -343,7 +345,7 @@ const PostBirthPage = ({ state }: PostBirthPageProps) => {
 
         <Card className="mt-10 w-full max-w-4xl border-none bg-white shadow-md">
           <CardHeader>
-            <CardDescription className="text-indigo-500">{SECTION_TITLES.schedule}</CardDescription>
+            <CardDescription className="text-slate">{SECTION_TITLES.schedule}</CardDescription>
             <CardTitle className="font-bold text-2xl">{SECTION_DESCRIPTIONS.schedule}</CardTitle>
           </CardHeader>
           <CardContent>
@@ -366,12 +368,6 @@ const PostBirthPage = ({ state }: PostBirthPageProps) => {
           showMoreLabel="追加のTODOを表示"
           title={SECTION_DESCRIPTIONS.tasks}
         />
-
-        <div className="mt-6 flex w-full max-w-4xl justify-end">
-          <Button asChild className="px-4 py-2" variant="outline">
-            <a href="#top">ページ上部に戻る</a>
-          </Button>
-        </div>
       </main>
     </>
   );

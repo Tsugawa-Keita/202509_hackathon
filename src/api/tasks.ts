@@ -12,7 +12,16 @@ type ScheduleItem = {
 
 const API_PATH = "/tasks";
 
-const endpoint = `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"}${API_PATH}`;
+// VITEの環境変数を解決
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+
+// 開発時のみ、設定値を確認のために出力
+if (import.meta.env.DEV) {
+  // biome-ignore lint/style/noConsole: デバッグ用途で環境変数の解決状況を確認
+  console.log("[env] VITE_API_BASE_URL:", import.meta.env.VITE_API_BASE_URL, "resolved:", apiBaseUrl);
+}
+
+const endpoint = `${apiBaseUrl}${API_PATH}`;
 
 const isValidTodoItem = (value: unknown): value is TodoItem => {
   if (!value || typeof value !== "object") {
@@ -94,6 +103,7 @@ export const usePostBirthTasks = () =>
     async () => {
       try {
         const remote = await fetchTodoList("post_birth");
+        console.log(remote);
         if (remote.length === 0) {
           throw new Error("Empty todo payload");
         }

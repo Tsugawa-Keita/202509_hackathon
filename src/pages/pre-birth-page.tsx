@@ -6,6 +6,14 @@ import TodoChecklistSection, { useTodoChecklist } from "@/components/tasks/todo-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  Carousel,
+  type CarouselApi,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -152,21 +160,66 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
   const motherSummary = useMemo(() => getMotherSummaryByWeeks(weeksPregnant), [weeksPregnant]);
   const dueDateDisplay = useMemo(() => createDisplayDate(state.dueDate), [state.dueDate]);
 
+  // ママの状態カードをカルーセル化するためのスライド情報
+  const slides = useMemo(
+    () => [
+      { key: "body", title: "身体の変化", text: motherSummary.body },
+      { key: "mind", title: "気持ちのゆらぎ", text: motherSummary.mind },
+      { key: "support", title: "パパのサポート", text: motherSummary.support },
+    ],
+    [motherSummary.body, motherSummary.mind, motherSummary.support]
+  );
+
+  const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const totalSlides = slides.length;
+
+  // 選択スライドの追従
+  useEffect(() => {
+    if (!carouselApi) return;
+    const onSelect = () => setCurrentIndex(carouselApi.selectedScrollSnap());
+    onSelect();
+    carouselApi.on("select", onSelect);
+    carouselApi.on("reInit", onSelect);
+    return () => {
+      carouselApi.off("select", onSelect);
+      carouselApi.off("reInit", onSelect);
+    };
+  }, [carouselApi]);
+
+  // 自動再生（ループ前提）
+  useEffect(() => {
+    if (!carouselApi) return;
+    const id = window.setInterval(() => {
+      if (!carouselApi) return;
+      if (carouselApi.canScrollNext()) {
+        carouselApi.scrollNext();
+      } else {
+        carouselApi.scrollTo(0);
+      }
+    }, 4000);
+    return () => window.clearInterval(id);
+  }, [carouselApi]);
+
+  useEffect(() => {
+    console.log(todoChecklist);
+  }, []);
+
   return (
     <main className="flex min-h-screen flex-col items-center bg-[#C5E4CA] px-6 py-12 text-slate-900">
       <Card className="w-full max-w-4xl border-none bg-white shadow-md">
         <CardHeader className="gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <CardDescription className="text-indigo-500 uppercase tracking-widest">
+            <CardDescription className="text-slate uppercase tracking-widest">
               出産準備の今を把握しましょう
             </CardDescription>
             <CardTitle className="mt-2 font-bold text-3xl lg:text-4xl">出産予定日まであと{daysUntilDue}日</CardTitle>
             <p className="mt-2 text-base text-slate-600">予定日: {dueDateDisplay}</p>
           </div>
-          <Card className="w-full max-w-xs border-none bg-indigo-50 px-5 py-4 text-indigo-900 shadow-none lg:w-auto">
+          <Card className="w-full max-w-xs border-none bg-[#fdf6e6] px-5 py-4 text-slate shadow-none lg:w-auto">
             <CardHeader className="gap-1 p-0">
-              <CardDescription className="font-semibold text-indigo-500/80 text-xs">現在の進捗</CardDescription>
-              <CardTitle className="font-bold text-2xl text-indigo-900">
+              <CardDescription className="font-semibold text-slate text-xs">現在の進捗</CardDescription>
+              <CardTitle className="font-bold text-2xl text-slate">
                 {todoChecklist.completedCount} / {todoChecklist.totalCount} 件
               </CardTitle>
             </CardHeader>
@@ -175,7 +228,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
                 <span>達成率</span>
                 <span>{todoChecklist.progressPercentage}%</span>
               </div>
-              <Progress className="mt-2 h-3" value={todoChecklist.progressPercentage} />
+              <Progress className="mt-2 h-3 bg-[#A4DDD3]" value={todoChecklist.progressPercentage} />
             </CardContent>
           </Card>
         </CardHeader>
@@ -185,7 +238,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
         <CardContent className="flex flex-col items-center gap-6 pt-8 lg:flex-row">
           <button
             aria-label="赤ちゃんが生まれたら長押しで出産後モードに切り替える"
-            className="flex h-40 w-40 transform items-center justify-center rounded-full bg-indigo-100 transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 active:scale-95"
+            className="flex h-60 w-60 transform items-center justify-center rounded-full bg-[#fdf6e6] transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 active:scale-95"
             onDoubleClick={handleDoubleClick}
             onKeyDown={handleKeyDown}
             onKeyUp={handleKeyUp}
@@ -197,7 +250,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
           >
             <img
               alt="胎内で丸まる赤ちゃんのイラスト"
-              className="h-24 w-24 object-contain"
+              className="h-40 w-40 object-contain"
               height={400}
               src="/taiji.png"
               width={375}
@@ -206,7 +259,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
           <div className="flex-1 space-y-3">
             <h2 className="font-semibold text-2xl">赤ちゃんが生まれたら、赤ちゃんアイコンを長押し</h2>
             <p className="text-base text-slate-600 leading-relaxed">
-              生まれた瞬間をアプリに記録する準備をしておきましょう。赤ちゃんが誕生したら、このアイコンを長押しすることで出産後モードへ切り替える可能です。
+              生まれた瞬間をアプリに記録する準備をしておきましょう。赤ちゃんが誕生したら、このアイコンを長押しすることで出産後モードへ切り替え可能です。
             </p>
           </div>
         </CardContent>
@@ -214,35 +267,32 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
 
       <Card className="mt-10 w-full max-w-4xl border-none bg-white shadow-md">
         <CardHeader>
-          <CardDescription className="text-indigo-500">ママの状態</CardDescription>
+          <CardDescription className="text-slate">ママの状態</CardDescription>
           <CardTitle className="font-bold text-2xl">{motherSummary.title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="mt-4 grid gap-6 lg:grid-cols-3">
-            <Card className="border-none bg-slate-50 p-5 shadow-none">
-              <CardHeader className="p-0">
-                <CardTitle className="font-semibold text-base text-slate-700">身体の変化</CardTitle>
-              </CardHeader>
-              <CardContent className="px-0">
-                <p className="mt-2 text-slate-600 text-sm leading-relaxed">{motherSummary.body}</p>
-              </CardContent>
-            </Card>
-            <Card className="border-none bg-slate-50 p-5 shadow-none">
-              <CardHeader className="p-0">
-                <CardTitle className="font-semibold text-base text-slate-700">気持ちのゆらぎ</CardTitle>
-              </CardHeader>
-              <CardContent className="px-0">
-                <p className="mt-2 text-slate-600 text-sm leading-relaxed">{motherSummary.mind}</p>
-              </CardContent>
-            </Card>
-            <Card className="border-none bg-slate-50 p-5 shadow-none">
-              <CardHeader className="p-0">
-                <CardTitle className="font-semibold text-base text-slate-700">パパのサポート</CardTitle>
-              </CardHeader>
-              <CardContent className="px-0">
-                <p className="mt-2 text-slate-600 text-sm leading-relaxed">{motherSummary.support}</p>
-              </CardContent>
-            </Card>
+          <Carousel className="mt-4" opts={{ loop: true }} setApi={setCarouselApi}>
+            <CarouselContent>
+              {slides.map((s) => (
+                <CarouselItem key={s.key}>
+                  <Card className="border-none bg-slate-50 p-5 shadow-none">
+                    <CardHeader className="p-0">
+                      <CardTitle className="font-semibold text-base text-slate-700">{s.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="px-0">
+                      <p className="mt-2 text-slate-600 text-sm leading-relaxed">{s.text}</p>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious aria-label="前のスライド" />
+            <CarouselNext aria-label="次のスライド" />
+          </Carousel>
+          <div className="mt-3 flex items-center justify-end text-slate-600 text-sm">
+            <span aria-live="polite">
+              {currentIndex + 1} / {totalSlides}
+            </span>
           </div>
         </CardContent>
       </Card>
@@ -253,10 +303,14 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>出産後モードに切り替えますか？</DialogTitle>
-            <DialogDescription>赤ちゃんが生まれたことを記録し、出産後のガイドに移動します。</DialogDescription>
+            <DialogDescription>
+              赤ちゃんが生まれたことを記録し、
+              <br />
+              出産後のガイドに移動します。
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button onClick={() => setConfirmOpen(false)} type="button" variant="outline">
+            <Button className="bg-white text-black shadow-sm" onClick={() => setConfirmOpen(false)} type="button">
               いいえ
             </Button>
             <Button onClick={handleConfirmTransition} type="button">

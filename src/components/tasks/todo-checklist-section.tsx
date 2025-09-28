@@ -233,7 +233,7 @@ const TodoChecklistSection = ({
     <Card className="mt-10 w-full max-w-4xl border-none bg-white shadow-md" id={sectionId}>
       <CardHeader className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <CardDescription className="text-indigo-500">{headerDescription}</CardDescription>
+          <CardDescription className="text-slate">{headerDescription}</CardDescription>
           <CardTitle className="font-bold text-2xl">{headerTitle}</CardTitle>
         </div>
         {loadError ? (
@@ -297,7 +297,7 @@ const TodoChecklistSection = ({
               </Button>
             </div>
             {completedTodos.length > 0 ? (
-              <section className="mt-10 border-t border-slate-200 pt-6">
+              <section className="mt-10 border-slate-200 border-t pt-6">
                 <div className="flex items-center justify-between gap-3">
                   <h3 className="font-semibold text-slate-700 text-sm">完了したタスク（{completedCount}件）</h3>
                   <Button
