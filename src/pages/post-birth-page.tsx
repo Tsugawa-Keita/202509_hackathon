@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ScheduleItem } from "@/api/tasks";
-import { usePostBirthTasks, useSchedule } from "@/api/tasks";
+import { useSyncTasks, useSchedule } from "@/api/tasks";
 import TodoChecklistSection, { type TodoItem, useTodoChecklist } from "@/components/tasks/todo-checklist-section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -242,7 +242,7 @@ const PostBirthPage = ({ state }: PostBirthPageProps) => {
     };
   }, [isCelebrationOpen]);
 
-  const { data: tasks, error: tasksError, isLoading: isTasksLoading } = usePostBirthTasks();
+  const { data: tasks, error: tasksError, isLoading: isTasksLoading } = useSyncTasks('post_birth');
   const { data: schedule, error: scheduleError, isLoading: isScheduleLoading } = useSchedule();
 
   const todoChecklist = useTodoChecklist({
