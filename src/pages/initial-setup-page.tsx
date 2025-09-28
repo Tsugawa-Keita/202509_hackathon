@@ -143,8 +143,15 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   };
 
   return (
-    <main className="flex min-h-dvh items-center bg-[#C5E4CA] px-6 py-12 text-foreground md:py-20">
-      <div className="mx-auto w-full max-w-2xl px-4 sm:px-6">
+    <main className="relative flex min-h-dvh items-center bg-[#C5E4CA] px-6 py-12 text-foreground md:py-20">
+        <img
+          alt="胎内で丸まる赤ちゃんのイラスト"
+          className="absolute top-1/2 translate-y-[-330px] left-1/2 translate-x-[-50%] h-60 w-60 object-contain lg:h-100 lg:w-100"
+          width={512}
+          height={512}
+          src="/images/papamo-character.png"
+        />
+      <div className="relative mx-auto w-full max-w-2xl px-4 sm:px-6">
         <Card className="bg-background text-card-foreground shadow-xl">
           <CardHeader className="gap-2 pb-0">
             <CardTitle className="text-center font-semibold text-2xl">出産予定日を登録</CardTitle>
