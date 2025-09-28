@@ -315,8 +315,7 @@ const PostBirthPage = ({ state }: PostBirthPageProps) => {
                   <span>{todoChecklist.progressPercentage}%</span>
                 </div>
                 <Progress
-                  aria-label="TODO達成率"
-                  className="mt-2 h-3 bg-[#A4DDD3]"
+                  className="!border-[#b8b8b8] mt-2 h-6 border-1 bg-[#C5E4CA]"
                   value={todoChecklist.progressPercentage}
                 />
               </CardContent>

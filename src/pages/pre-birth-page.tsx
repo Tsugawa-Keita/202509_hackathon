@@ -228,7 +228,10 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
                 <span>達成率</span>
                 <span>{todoChecklist.progressPercentage}%</span>
               </div>
-              <Progress className="mt-2 h-3 bg-[#A4DDD3]" value={todoChecklist.progressPercentage} />
+              <Progress
+                className="!border-[#b8b8b8] mt-2 h-6 border-1 bg-[#C5E4CA]"
+                value={todoChecklist.progressPercentage}
+              />
             </CardContent>
           </Card>
         </CardHeader>
@@ -286,7 +289,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious aria-label="前のスライド" />
+            <CarouselPrevious aria-label="前のスライド" className="border-slate-100" />
             <CarouselNext aria-label="次のスライド" />
           </Carousel>
           <div className="mt-3 flex items-center justify-end text-slate-600 text-sm">
@@ -303,11 +306,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>出産後モードに切り替えますか？</DialogTitle>
-            <DialogDescription>
-              赤ちゃんが生まれたことを記録し、
-              <br />
-              出産後のガイドに移動します。
-            </DialogDescription>
+            <DialogDescription>赤ちゃんが生まれたことを記録し、 出産後のガイドに移動します。</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button className="bg-white text-black shadow-sm" onClick={() => setConfirmOpen(false)} type="button">
