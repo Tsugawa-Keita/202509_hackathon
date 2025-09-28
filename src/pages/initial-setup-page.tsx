@@ -143,7 +143,7 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
   };
 
   return (
-    <main className="flex items-center min-h-dvh bg-[#C5E4CA] py-12 text-foreground md:py-20">
+    <main className="flex items-center min-h-dvh bg-[#C5E4CA] py-12 px-6 text-foreground md:py-20">
       <div className="mx-auto w-full max-w-2xl px-4 sm:px-6">
         <Card className="border border-border bg-background text-card-foreground shadow-xl">
           <CardHeader className="gap-2 pb-0">
@@ -156,7 +156,7 @@ const InitialSetupPage = ({ onConfigured }: InitialSetupPageProps) => {
             >
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="block font-medium text-muted-foreground text-sm" htmlFor="due-date">
+                  <Label className="block font-bold text-muted-foreground text-sm tracking-wider" htmlFor="due-date">
                     出産予定日
                   </Label>
                   <Input
