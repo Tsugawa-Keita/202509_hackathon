@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ScheduleItem } from "@/api/tasks";
-import { useSyncTasks, useSchedule } from "@/api/tasks";
+import { useSchedule, useSyncTasks } from "@/api/tasks";
 import TodoChecklistSection, { type TodoItem, useTodoChecklist } from "@/components/tasks/todo-checklist-section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -107,7 +107,7 @@ const buildImportantTaskContent = ({ anchorId, importantTask, isChecklistReady }
       href={`#${anchorId}`}
     >
       <span className="font-semibold text-slate-700 text-sm">{IMPORTANT_TASK_HEADING}</span>
-      <span className="font-bold text-lg text-slate-700">{importantTask.text}</span>
+      <span className="font-bold text-lg text-slate-700">{importantTask.task}</span>
       <Badge className={priorityBadge.accent}>{priorityBadge.label}</Badge>
       <span className="text-rose-700/90 text-xs">{IMPORTANT_TASK_LINK_HINT}</span>
     </a>
@@ -242,7 +242,7 @@ const PostBirthPage = ({ state }: PostBirthPageProps) => {
     };
   }, [isCelebrationOpen]);
 
-  const { data: tasks, error: tasksError, isLoading: isTasksLoading } = useSyncTasks('post_birth');
+  const { data: tasks, error: tasksError, isLoading: isTasksLoading } = useSyncTasks("post_birth");
   const { data: schedule, error: scheduleError, isLoading: isScheduleLoading } = useSchedule();
 
   const todoChecklist = useTodoChecklist({
@@ -294,7 +294,14 @@ const PostBirthPage = ({ state }: PostBirthPageProps) => {
         </DialogContent>
       </Dialog>
       <main className="flex min-h-screen flex-col items-center bg-[#FFF2D4] px-6 py-12 text-slate-900" id="top">
-        <Card className="w-full max-w-4xl border-none bg-white shadow-md">
+        <Card className="relative w-full max-w-4xl border-none bg-white shadow-md">
+          <img
+            alt="胎内で丸まる赤ちゃんのイラスト"
+            className="absolute top-0.5 right-0.5 h-30 w-30 object-contain lg:top-5 lg:right-60 lg:h-60 lg:w-60"
+            height={400}
+            src="/child.jpeg"
+            width={375}
+          />
           <CardHeader className="gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <CardDescription className="text-slate uppercase tracking-widest">{PAGE_CONTENT.title}</CardDescription>
@@ -364,7 +371,7 @@ const PostBirthPage = ({ state }: PostBirthPageProps) => {
           description={SECTION_TITLES.tasks}
           emptyMessage="すべて完了しました。次のステップに備えましょう。"
           sectionId={ANCHOR_IDS.tasks}
-          showMoreLabel="追加のTODOを表示"
+          showMoreLabel="さらに表示"
           title={SECTION_DESCRIPTIONS.tasks}
         />
       </main>

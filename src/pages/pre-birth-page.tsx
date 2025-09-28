@@ -197,7 +197,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
       } else {
         carouselApi.scrollTo(0);
       }
-    }, 4000);
+    }, 6000);
     return () => window.clearInterval(id);
   }, [carouselApi]);
 
@@ -290,7 +290,7 @@ const PreBirthPage = ({ onStateChange, state }: PreBirthPageProps) => {
               ))}
             </CarouselContent>
             <CarouselPrevious aria-label="前のスライド" className="border-slate-100" />
-            <CarouselNext aria-label="次のスライド" />
+            <CarouselNext aria-label="次のスライド" className="border-slate-100" />
           </Carousel>
           <div className="mt-3 flex items-center justify-end text-slate-600 text-sm">
             <span aria-live="polite">
